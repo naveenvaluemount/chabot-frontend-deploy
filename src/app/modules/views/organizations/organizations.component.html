@@ -1,0 +1,136 @@
+<app-crud
+[isEmpty]="isEmpty"
+[isLoaded]="isLoaded"
+[rows]="orgs"
+[columns]="columns"
+[breadcrumbs]="breadcrumbs"
+[formTemplate]="formTemplate"
+[filterTemplate]="filterTemplate"
+[pagination]="params"
+(onPageChange)="onPageChange($event)"
+(onSubmit)="onSubmit()"
+(onUpdate)="onUpdate()"
+(onApply)= "onApply()"
+(onChange)="onChange($event)"
+(onSearch)="onSearch($event)"
+>
+</app-crud>
+<ng-template #orgTemp let-row="row">
+    <div class="flex items-center" role="button">
+        <div [attr.acronym]="row?.clientName"></div>
+          <div class="ml-4 mr-auto">
+            <div class="font-semibold">{{row?.clientName}}</div>
+            <div class="text-sm text-gray-400">{{row?.domain}}</div>
+          </div>
+      </div>
+</ng-template>
+<ng-template #createdTemp let-row="row"> {{row.createdTime | date:'mediumDate'}} </ng-template>
+<ng-template #updatedTemp let-row="row"> {{row.updatedTime | date:'mediumDate'}} </ng-template>
+<ng-template #statusTemp let-row="row">
+    <app-status-badge [className]="row.status === 'active' ? 'bg-blue-500' : 'bg-gray-400'" [label]="row.status"></app-status-badge>
+</ng-template>
+<ng-template #publishTemp let-row="row">
+    <app-status-badge [className]="row.publishedStatus ? 'bg-green-500' : 'bg-red-500'" [label]="row.publishedStatus ? 'Published' : 'Un Published'">
+        <div class="text-sm text-gray-400">{{row.publishedOn | date:'mediumDate'}}</div>
+    </app-status-badge>
+
+</ng-template>
+<ng-template #actionsTemp let-row="row">
+<div class="flex items-center">
+    <button type="button" mat-icon-button (click)="deleteFn(row)" matTooltip="Delete" data-cy="delete" [disabled]="row.publishedStatus"><mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon></button>
+    <button type="button" mat-icon-button (click)="updateFn(row)" matTooltip="Update" data-cy="edit"><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
+    <button type="button" mat-icon-button [routerLink]="[row.id]"   matTooltip="view" data-cy="view"><mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon></button>
+</div>
+</ng-template>
+<ng-template #filterTemplate>
+    <form [formGroup]="filter">
+    <div class="col-span-2">
+        <mat-form-field class="w-full" hideRequiredMarker>
+            <mat-label>Published</mat-label>
+                <mat-select name="published_status" formControlName="published_status">
+                  <mat-option value="">All</mat-option>
+                  <mat-option *ngFor="let published of publishedList" [value]="published.value"  >
+                    {{published.name}}
+                  </mat-option>
+                </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-span-2">
+        <mat-form-field class="w-full" hideRequiredMarker>
+            <mat-label>Status</mat-label>
+                <mat-select name="status" formControlName="status">
+                    <mat-option value="">All</mat-option>
+                  <mat-option *ngFor="let status of statusList" [value]="status.value"  >
+                    {{status.name}}
+                  </mat-option>
+                </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+</ng-template>
+
+<ng-template #formTemplate>
+
+    <form [formGroup]="form">
+         <div class="grid grid-cols-1 gap-4">
+            <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Organization</mat-label>
+                <input matInput formControlName="clientName" data-cy="clientName">
+                <mat-error *ngIf="form.get('clientName').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" data-cy="email">
+                <mat-error *ngIf="form.get('email').hasError('required')">*Required </mat-error>
+                <mat-error *ngIf="form.get('email').hasError('email')">Invalid Email </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="phoneNumber" data-cy="phoneNumber">
+                <mat-error *ngIf="form.get('phoneNumber').hasError('required')">*Required </mat-error>
+                <mat-error *ngIf="form.get('phoneNumber').hasError('pattern')">Invalid Phone Number </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Domain</mat-label>
+                <input matInput formControlName="domain" data-cy="domain">
+                <mat-error *ngIf="form.get('domain').hasError('required')">*Required </mat-error>
+                <mat-error *ngIf="form.get('domain').hasError('pattern')">Invalid Domain Name </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Address</mat-label>
+                <textarea matInput formControlName="address" data-cy="address"></textarea>
+                <mat-error *ngIf="form.get('address').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" subscriptSizing='dynamic'>
+                <mat-label>Default Answer</mat-label>
+                <textarea matInput formControlName="defaultAnswer" data-cy="defaultAnswer"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2" *ngIf="form.get('id').value">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Status</mat-label>
+                    <mat-select name="status" formControlName="status">
+                      <mat-option *ngFor="let status of statusList" [value]="status.value">
+                        {{status.name}}
+                      </mat-option>
+                    </mat-select>
+                <mat-error *ngIf="form.get('status').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+
+    </div>
+
+    </form>
+
+</ng-template>

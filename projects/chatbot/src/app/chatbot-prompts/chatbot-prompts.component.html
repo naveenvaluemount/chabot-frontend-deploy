@@ -1,0 +1,10 @@
+
+ <ng-container *ngIf="data?.prompts?.length > 0">
+    <p>{{data.answer}}</p>
+    <ul>
+        <li role="button" *ngFor="let item of data?.prompts" (click)="select(item)">{{item.displayText}}</li>
+    </ul>
+ </ng-container>
+ <ng-container *ngIf="data?.prompts?.length == 0">
+    <chatbot-message [content]="data.answer"></chatbot-message>
+ </ng-container>

@@ -1,0 +1,119 @@
+<app-crud
+[isEmpty]="isEmpty"
+[isLoaded]="isLoaded"
+[rows]="users"
+[columns]="columns"
+[breadcrumbs]="breadcrumbs"
+[formTemplate]="formTemplate"
+[filterTemplate]="filterTemplate"
+[pagination]="userParams"
+(onPageChange)="onPageChange($event)"
+(onSubmit)="onSubmit()"
+(onApply)="onApply()"
+(onUpdate)="onUpdate()"
+(onChange)="onChange($event)"
+(onSearch)="onSearch($event)"
+>
+</app-crud>
+
+
+
+<ng-template #orgsTemp let-row="row">
+
+    <span *ngFor="let item of row.organizationDtos |  slice:0:2;let last = last">
+        
+        {{item.clientName}}{{!last ? ',' : ''}} 
+    </span>
+
+    +{{row.organizationDtos.length - 2}}
+
+</ng-template>
+<ng-template #actionsTemp let-row="row">
+    <button data-cy="delete" type="button" (click)="deleteFn(row)" mat-icon-button><mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon></button>
+    <button data-cy="edit" type="button" (click)="updateFn(row)" mat-icon-button><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
+</ng-template>
+
+<ng-template #statusTemp let-row="row">
+    <span
+    class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+    [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status=='inActive',
+                'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': row.status=='active'}">
+    <span class="leading-relaxed whitespace-nowrap">{{row.status}}</span>
+    </span>
+</ng-template>
+
+
+<ng-template #filterTemplate>
+    <form [formGroup]="form">
+        <div>
+            <mat-form-field class="w-full" hideRequiredMarker>
+                <mat-label>Status</mat-label>
+                <mat-select data-cy="status" formControlName="status">
+                    <mat-option value="active">Active</mat-option>
+                    <mat-option value="inActive">Inactive</mat-option>
+                  </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+</ng-template>
+<ng-template #formTemplate>
+    <form [formGroup]="form">
+         <div class="grid grid-cols-2 gap-4">
+        <div>
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>First Name</mat-label>
+                <input data-cy="firstName" matInput formControlName="firstName">
+                <mat-error *ngIf="form.get('firstName').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Last Name</mat-label>
+                <input data-cy="lastName" matInput formControlName="lastName">
+                <mat-error *ngIf="form.get('lastName').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Username</mat-label>
+                <input data-cy="userName" matInput formControlName="userName">
+                <mat-error *ngIf="form.get('userName').hasError('required')">*Required </mat-error>
+                <mat-error *ngIf="form.get('userName').hasError('email')">Invalid Email </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Mobile</mat-label>
+                <input data-cy="phoneNumber" matInput formControlName="phoneNumber">
+                <mat-error *ngIf="form.get('phoneNumber').hasError('required')">*Required </mat-error>
+                <mat-error *ngIf="form.get('phoneNumber').hasError('pattern')">Invalid Phone Number</mat-error>
+            </mat-form-field>
+        </div>
+
+
+        <div [ngClass]="{'col-span-2' : !form.get('userId').value }">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Organization</mat-label>
+                <mat-select data-cy="orgIds" multiple formControlName="orgIds">
+                    <mat-option *ngFor="let item of orgs" [value]="item.id">{{item.clientName}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form.get('orgIds').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div *ngIf="form.get('userId').value">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Status</mat-label>
+                <mat-select name="status" formControlName="status">
+                    <mat-option *ngFor="let status of statusList" [value]="status.value"  >
+                      {{status.name}}
+                    </mat-option>
+                  </mat-select>
+                  <!-- <mat-error *ngIf="form.get('status').hasError('required')">*Required </mat-error> -->
+            </mat-form-field>
+        </div>
+    </div>
+
+    </form>
+
+</ng-template>

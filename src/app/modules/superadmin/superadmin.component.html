@@ -1,0 +1,33 @@
+<fuse-vertical-navigation
+class="bg-gray-900 text-white"
+    [appearance]="'compact'"
+    [autoCollapse]="true"
+    [inner]="false"
+    [mode]="'side'"
+    [name]="'leftNavigation'"
+    [navigation]="[    
+    {
+        id: 'organizations',
+        title: 'Organizations',
+        type: 'basic',
+        icon: 'heroicons_outline:building-library',
+        link: 'organizations'
+    }, {
+        id: 'users',
+        title: 'Users',
+        type: 'basic',
+        icon: 'heroicons_outline:users',
+        link: 'users'
+    }]"
+    [opened]="true"
+    [position]="'left'"
+    [transparentOverlay]="false">
+    <ng-container fuseVerticalNavigationHeader>
+        <div class="flex items-center justify-center h-20 mt-3 mb-4">
+            <img class="w-10" src="assets/images/logo/logo.svg" alt="Logo image">
+        </div>
+    </ng-container>
+    <app-member class="flex justify-center items-center py-5" fuseVerticalNavigationFooter></app-member>
+  
+</fuse-vertical-navigation>
+<router-outlet></router-outlet>

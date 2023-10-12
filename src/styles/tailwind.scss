@@ -1,0 +1,23 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Main Tailwind file for injecting utilities.
+/* ----------------------------------------------------------------------------------------------------- */
+@tailwind utilities;
+
+
+.fuse-vertical-navigation-item-active{
+    @apply bg-primary/25 #{!important};
+}
+
+[acronym]{
+
+    @apply flex items-center justify-center text-xl text-white w-10 h-10 rounded-full bg-primary;
+    &:before{
+        content: attr(acronym);
+        display: block;
+        overflow: hidden;
+        max-width: 2ch;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: nowrap;
+    }
+    
+}

@@ -1,0 +1,97 @@
+<fuse-vertical-navigation
+class="bg-white"
+    [appearance]="'compact'"
+    [autoCollapse]="true"
+    [inner]="false"
+    [mode]="'side'"
+    [name]="'leftNavigation'"
+    [navigation]="[
+    {
+        id: 'services',
+        title: 'Services',
+        type: 'basic',
+        icon: 'heroicons_outline:cog-6-tooth',
+        link: 'services'
+    }, {
+        id: 'themes',
+        title: 'Themes',
+        type: 'basic',
+        icon: 'heroicons_outline:paint-brush',
+        link: 'themes'
+    }, {
+        id: 'whitelist',
+        title: 'Whitelist',
+        type: 'basic',
+        icon: 'heroicons_outline:check-circle',
+        link: 'whitelist'
+    }, {
+        id: 'faq',
+        title: 'FAQ',
+        type: 'basic',
+        icon: 'heroicons_outline:question-mark-circle',
+        link: 'faq'
+    }, {
+        id: 'templates',
+        title: 'Templates',
+        type: 'basic',
+        icon: 'heroicons_outline:question-mark-circle',
+        link: 'templates'
+    }]"
+    [opened]="true"
+    [position]="'left'"
+    [transparentOverlay]="false">
+    <ng-container fuseVerticalNavigationContentFooter>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{icon:'heroicons_outline:code-bracket',title:'Code',onclick:getCode.bind(this)}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{icon:'heroicons_outline:rocket-launch',title:'Publish',onclick:getPublish.bind(this)}"></ng-container>
+    </ng-container>
+    <!-- {
+        id: 'code',
+        title: 'Code',
+        type: 'basic',
+        icon: 'heroicons_outline:code',
+        link: 'code'
+    }, {
+        id: 'publish',
+        title: 'Publish',
+        type: 'basic',
+        icon: 'heroicons_outline:upload',
+        link: 'publish'
+    } -->
+    <ng-container fuseVerticalNavigationHeader>
+        <div class="flex flex-col items-center justify-center py-5 px-3" *ngIf="this.api.isAdmin()" routerLink="/" role="button">
+            <img class="w-10" src="assets/images/logo/logo.svg" alt="Logo image">
+        </div>
+        <div class="flex flex-col items-center justify-center py-5 px-3">
+            <div class="relative">
+                <div class="h-2 w-2 absolute rounded-full shadow-[0pc_0px_0px_2px_black] shadow-white" [ngClass]="organization?.publishedStatus? 'bg-green-500' : 'bg-red-500'"></div>
+                <div [attr.acronym]="organization?.clientName"></div>
+            </div>
+            <ng-container *ngIf="this.api.isAdmin()">
+                <div class="w-full flex items-center mt-2" [matMenuTriggerFor]="menu" role="button">
+                    <div class="w-full truncate font-bold text-center">{{organization?.clientName}}</div>
+                    <mat-icon [svgIcon]="'heroicons_outline:chevron-down'" class=" icon-size-4"></mat-icon>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="this.api.isSuperAdmin()">
+                <div class="w-full truncate font-bold text-center mt-2">{{organization?.clientName}}</div>
+            </ng-container>
+         </div>
+    </ng-container>
+    <app-member class="flex justify-center items-center mb-5" *ngIf="this.api.isAdmin()" fuseVerticalNavigationFooter></app-member>
+</fuse-vertical-navigation>
+
+<ng-template #nav let-icon="icon" let-title="title" let-onclick="onclick">
+    <div class="mb-[4px]" role="button">
+        <div class="m-[4px_8px_0_8px]">
+            <a class="flex flex-col justify-center items-center rounded-[6px] p-[12px] hover:bg-black/5" (click)="onclick($event)">
+                <mat-icon [svgIcon]="icon || 'heroicons_outline:home'"></mat-icon>
+                <span class="mt-[8px] text-[12px]">{{title || 'Title'}}</span>
+            </a>
+        </div>
+    </div>
+</ng-template>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let item of organizations" [routerLink]="['..',item.id]">{{item.clientName}}</button>
+</mat-menu>
+<router-outlet></router-outlet>

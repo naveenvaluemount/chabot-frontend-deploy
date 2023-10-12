@@ -1,0 +1,138 @@
+<app-crud
+[isEmpty]="isEmpty"
+[isLoaded]="isLoaded"
+[rows]="templates"
+[columns]="columns"
+[breadcrumbs]="breadcrumbs"
+[whatsAppTemplate]="formTemplate"
+[filterTemplate]="filterTemplate"
+[pagination]="params"
+(onPageChange)="onPageChange($event)"
+(onSubmit)="onSubmit()"
+(onUpdate)="onUpdate()"
+(onApply)= "onApply()"
+(onChange)="onChange($event)"
+(onSearch)="onSearch($event)"
+>
+</app-crud>
+<ng-template #orgTemp let-row="row">
+    <div class="flex items-center" role="button">
+        <div [attr.acronym]="row?.clientName"></div>
+          <div class="ml-4 mr-auto">
+            <div class="font-semibold">{{row?.clientName}}</div>
+            <div class="text-sm text-gray-400">{{row?.domain}}</div>
+          </div>
+      </div>
+</ng-template>
+<ng-template #createdTemp let-row="row"> {{row.createdTime | date:'mediumDate'}} </ng-template>
+<ng-template #updatedTemp let-row="row"> {{row.updatedTime | date:'mediumDate'}} </ng-template>
+<ng-template #statusTemp let-row="row">
+    <app-status-badge [className]="row.status === 'active' ? 'bg-blue-500' : 'bg-gray-400'" [label]="row.status"></app-status-badge>
+</ng-template>
+<ng-template #publishTemp let-row="row">
+    <app-status-badge [className]="row.publishedStatus ? 'bg-green-500' : 'bg-red-500'" [label]="row.publishedStatus ? 'Published' : 'Un Published'">
+        <div class="text-sm text-gray-400">{{row.publishedOn | date:'mediumDate'}}</div>
+    </app-status-badge>
+
+</ng-template>
+<ng-template #actionsTemp let-row="row">
+<div class="flex items-center">
+    <button type="button" mat-icon-button (click)="deleteFn(row)" matTooltip="Delete" data-cy="delete" [disabled]="row.publishedStatus"><mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon></button>
+    <button type="button" mat-icon-button (click)="updateFn(row)" matTooltip="Update" data-cy="edit"><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
+
+</div>
+</ng-template>
+<ng-template #filterTemplate>
+    <form [formGroup]="filter">
+    <div class="col-span-2">
+        <mat-form-field class="w-full" hideRequiredMarker>
+            <mat-label>Published</mat-label>
+                <mat-select name="published_status" formControlName="published_status">
+                  <mat-option value="">All</mat-option>
+                  <mat-option *ngFor="let published of publishedList" [value]="published.value"  >
+                    {{published.name}}
+                  </mat-option>
+                </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-span-2">
+        <mat-form-field class="w-full" hideRequiredMarker>
+            <mat-label>Status</mat-label>
+                <mat-select name="status" formControlName="status">
+                    <mat-option value="">All</mat-option>
+                  <mat-option *ngFor="let status of statusList" [value]="status.value"  >
+                    {{status.name}}
+                  </mat-option>
+                </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+</ng-template>
+
+<ng-template #formTemplate>
+
+    <form [formGroup]="form">
+         <div class="grid grid-cols-1 gap-4">
+            <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Category</mat-label>
+                    <mat-select name="Category" formControlName="category">
+                      <mat-option *ngFor="let category of categoryList" [value]="category.value">
+                        {{category.name}}
+                      </mat-option>
+                    </mat-select>
+                <mat-error *ngIf="form.get('category').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="templateName" data-cy="templateName">
+                <mat-error *ngIf="form.get('templateName').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Language</mat-label>
+                    <mat-select name="language" formControlName="language">
+                      <mat-option *ngFor="let language of languageList" [value]="language.value">
+                        {{language.name}}
+                      </mat-option>
+                    </mat-select>
+                <mat-error *ngIf="form.get('language').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <div class="text-lg font-bold">Content <mat-icon class="ml-auto" svgIcon="heroicons_outline:plus" (click)="addContent()" role="button"></mat-icon></div>
+            <div formArrayName="content" class="mt-3 -mx-8">
+
+                <div *ngFor="let quest of form.get('content')['controls']; index as i" [formGroupName]="i" class="px-8 py-3 bg-gray-100 rounded mb-2">
+                    <div>
+                    <div class="col-span-2">
+                    <mat-form-field class="w-full" hideRequiredMarker >
+                        <mat-label>Section</mat-label>
+                        <mat-select data-cy="content" formControlName="section">
+                            <div>
+                                <mat-option *ngFor="let section of sectionList"  [value]="section.value">{{section.name}}</mat-option>
+                            </div>
+                          </mat-select>
+                    </mat-form-field>
+                </div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Value</mat-label>
+                        <input matInput formControlName="value" data-cy="value">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Example</mat-label>
+                        <input matInput formControlName="example" #exmp data-cy="example">
+                    </mat-form-field>
+                </div>
+            </div>
+            </div>
+        </div>
+{{form.value | json}}
+    </div>
+    </form>
+
+</ng-template>

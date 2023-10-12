@@ -1,0 +1,123 @@
+<app-crud
+[isEmpty]="isEmpty"
+[isLoaded]="isLoaded"
+[rows]="categories"
+[columns]="columns"
+[formTemplate]="formTemplate"
+[filterTemplate]="filterTemplate"
+[breadcrumbs]="breadcrumbs"
+[pagination]="params"
+(onPageChange)="onPageChange($event)"
+(onApply)="onApply()"
+(onSubmit)="onSubmit()"
+(onUpdate)="onUpdate()"
+(onChange)="onChange($event)"
+(onSearch)="onSearch($event)"
+>
+</app-crud>
+
+<ng-template #actionsTemp let-row="row">
+    <button type="button" data-cy="delete" mat-icon-button (click)="deleteFn(row)"><mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon></button>
+    <button type="button" data-cy="edit" mat-icon-button (click)="updateFn(row)"><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
+</ng-template>
+
+<!-- Status Temp -->
+<ng-template #statusTemp let-row="row">
+    <app-status-badge [className]="row.status === 'active' ? 'bg-blue-500' : 'bg-gray-400'" [label]="row.status"></app-status-badge>
+</ng-template>
+
+<!-- Fiter Template -->
+<ng-template #filterTemplate>
+<form [formGroup]="form">
+    <div>
+        <mat-form-field class="w-full" hideRequiredMarker>
+            <mat-label>Status</mat-label>
+            <mat-select data-cy="status" formControlName="status">
+                <mat-option value="active">Active</mat-option>
+                <mat-option value="inActive">Inactive</mat-option>
+              </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+</ng-template>
+
+<ng-template #formTemplate>
+    <form [formGroup]="form">
+         <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Service Name</mat-label>
+                <input matInput formControlName="categoryName" data-cy="categoryName">
+                <mat-error *ngIf="form.get('categoryName').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Service Type</mat-label>
+                    <mat-select name="status" formControlName="loginTypesId">
+                      <mat-option *ngFor="let type of serviceTypeList" [value]="type.value"  >
+                        {{type.name}}
+                      </mat-option>
+                    </mat-select>
+
+                <mat-error *ngIf="form.get('loginTypesId').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+        <!-- <div>
+            <mat-form-field class="w-full">
+                <mat-label>Parent</mat-label>
+                <mat-select  formControlName="parentCategoryId" data-cy="parentCategoryId">
+                    <mat-option *ngFor="let item of categories" [value]="item.categoryId">{{item.categoryName}}</mat-option>
+                  </mat-select>
+            </mat-form-field>
+        </div> -->
+        <div class="col-span-2">
+            <mat-form-field class="w-full" subscriptSizing='dynamic'>
+                <mat-label>Default Text</mat-label>
+                <textarea matInput formControlName="answer" data-cy="defaultText"></textarea>
+            </mat-form-field>
+        </div>
+
+         <div class="col-span-2">
+        <mat-label class="flex items-center mb-2">Prompts <mat-icon class="ml-auto" svgIcon="heroicons_outline:plus" (click)="addPremices()" role="button"></mat-icon>
+        </mat-label>
+        <div formArrayName="qnaPrompts" class="flex flex-col gap-2">
+
+            <div *ngFor="let quest of form.get('qnaPrompts')['controls']; index as i" [formGroupName]="i" class="flex items-center gap-2" >
+
+                <mat-form-field hideRequiredMarker subscriptSizing='dynamic' class="flex-auto">
+                    <mat-label class="text-sm">Title</mat-label>
+                    <mat-select data-cy="qnaPrompts" formControlName="categoryId">
+                            <mat-option *ngFor="let cat of categories" [value]="cat.categoryId">{{cat.categoryName}}</mat-option>
+                      </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto" subscriptSizing='dynamic'>
+                    <mat-label class="text-sm">Display Text</mat-label>
+                    <input matInput formControlName="displayText" data-cy="displayText">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto" subscriptSizing='dynamic'>
+                    <mat-label class="text-sm">Display Order</mat-label>
+                    <input matInput formControlName="displayOrder" data-cy="displayOrder">
+                </mat-form-field>
+                <button mat-icon-button class="self-end mb-[4px]"><mat-icon svgIcon="heroicons_outline:trash" (click)="form.get('qnaPrompts')['controls'].length > 1 && removePremices(i)" role="button"></mat-icon></button>
+
+            </div>
+        </div>
+    </div>
+
+        <div class="col-span-2" *ngIf="form.get('categoryId').value">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Status</mat-label>
+                    <mat-select name="status" formControlName="status">
+                      <mat-option *ngFor="let status of statusList" [value]="status.value"  >
+                        {{status.name}}
+                      </mat-option>
+                    </mat-select>
+                <mat-error *ngIf="form.get('status').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    </form>
+</ng-template>

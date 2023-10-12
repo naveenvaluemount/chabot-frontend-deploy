@@ -1,0 +1,84 @@
+<!-- Button -->
+<button mat-icon-button [matMenuTriggerFor]="userActions"> <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon></button>
+<mat-menu #userActions="matMenu" yPosition="above" xPosition="after">
+    <button mat-menu-item>
+        <span class="flex flex-col leading-none">
+            <span>Signed in as</span>
+            <span class="mt-1.5 text-md font-medium">{{user.userName}}</span>
+        </span>
+    </button>
+    <button mat-menu-item (click)="showProfile()"><mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon><span>My Profile</span></button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item (click)="changePassword()"><mat-icon [svgIcon]="'heroicons_outline:cog-6-tooth'"></mat-icon><span>Change Password</span></button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item (click)="signOut()"><mat-icon [svgIcon]="'heroicons_outline:power'"></mat-icon><span>Sign out</span></button>
+</mat-menu>
+
+<ng-template #showProfileTemp>
+    <app-dialog class="-m-[24px]">
+        <app-dialog-header title="Profile"><button data-cy="close" type="button" mat-icon-button class="-mr-5" mat-dialog-close (click)="close()"><mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon></button></app-dialog-header>
+        <app-dialog-body>
+            <div class="grid grid-cols-1 -m-8">
+            
+                <div class="border-b border-gray-200/75 px-8 py-4">
+                    <div class="text-sm text-gray-400">Name</div>
+                    <div class="font-semibold">{{profileDetails.firstName +" "+  profileDetails.lastName | uppercase}}</div>
+                </div>
+                <div class="border-b border-gray-200/75 px-8 py-4">
+                    <div class="text-sm text-gray-400">Role</div>
+                    <div class="font-semibold">{{profileDetails.jobRole | uppercase}}</div>
+                </div>
+                <div class="border-b border-gray-200/75 px-8 py-4">
+                    <div class="text-sm text-gray-400">Email</div>
+                    <div class="font-semibold">{{profileDetails.userName }}</div>
+                </div>
+                <div class="px-8 py-4">
+                    <div class="text-sm text-gray-400">Phone Number</div>
+                    <div class="font-semibold">{{profileDetails.phoneNumber }}</div>
+                </div>
+            </div>
+        </app-dialog-body>
+        <app-dialog-footer>
+            <button data-cy="close" type="button" mat-stroked-button color="primary" mat-dialog-close (click)="close()">Close</button>
+        </app-dialog-footer>
+    </app-dialog>
+</ng-template>
+
+<ng-template #changePasswordTemp>
+    <app-dialog class="-m-[24px]">
+        <app-dialog-header title="Change Password"><button data-cy="close" type="button" mat-icon-button class="-mr-5" mat-dialog-close (click)="close()"><mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon></button></app-dialog-header>
+        <app-dialog-body>
+            <form [formGroup]="form">
+                <div class="grid grid-cols-1 gap-4">
+                   <div>
+                   <mat-form-field class="w-full" hideRequiredMarker>
+                       <mat-label>Old Password</mat-label>
+                       <input matInput formControlName="oldPassword" data-cy="oldPassword">
+                       <mat-error *ngIf="form.get('oldPassword').hasError('required')">*Required </mat-error>
+                   </mat-form-field>
+               </div>
+               <div>
+                <mat-form-field class="w-full" hideRequiredMarker>
+                    <mat-label>New Password</mat-label>
+                    <input matInput formControlName="newPassword" data-cy="newPassword">
+                    <mat-error *ngIf="form.get('newPassword').hasError('required')">*Required </mat-error>
+                </mat-form-field>
+            </div>
+               <div>
+                <mat-form-field class="w-full" hideRequiredMarker>
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput formControlName="confirmPassword" data-cy="confirmPassword">
+                    <mat-error *ngIf="form.get('confirmPassword').hasError('required')">*Required </mat-error>
+                </mat-form-field>
+            </div>
+               </div>
+               </form>
+        </app-dialog-body>
+        <app-dialog-footer>
+            <button data-cy="cancel" type="button" mat-stroked-button color="primary"  mat-dialog-close (click)="close()">Cancel</button>
+            <button data-cy="update" type="button" mat-flat-button color="primary" (click)="updatePassword()">Update</button>
+        </app-dialog-footer>
+    </app-dialog>
+
+
+</ng-template>

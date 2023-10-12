@@ -1,0 +1,243 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "fuse": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "",
+            "sourceRoot": "src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/fuse",
+                        "index": "src/index.html",
+                        "main": "src/main.ts",
+                        "polyfills": [
+                            "zone.js"
+                        ],
+                        "tsConfig": "tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
+                        "allowedCommonJsDependencies": [
+                            "apexcharts",
+                            "highlight.js",
+                            "crypto-js/enc-utf8",
+                            "crypto-js/hmac-sha256",
+                            "crypto-js/enc-base64",
+                            "flat",
+                            "quill"
+                        ],
+                        "assets": [
+                            "src/favicon-16x16.png",
+                            "src/favicon-32x32.png",
+                            "src/assets",
+                            {
+                                "glob": "_redirects",
+                                "input": "src",
+                                "output": "/"
+                            }
+                        ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "src/@fuse/styles"
+                            ]
+                        },
+                        "styles": [
+                            "src/@fuse/styles/tailwind.scss",
+                            "src/@fuse/styles/themes.scss",
+                            "src/styles/vendors.scss",
+                            "src/@fuse/styles/main.scss",
+                            "src/styles/styles.scss",
+                            "src/styles/tailwind.scss"
+                        ],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "3mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "75kb",
+                                    "maximumError": "90kb"
+                                }
+                            ],
+                            "outputHashing": "all",
+                            "fileReplacements": [
+                              {
+                                "with": "src/environments/environment.ts",
+                                "replace": "src/environments/environment.development.ts"
+                              }
+                            ]
+                        },
+                        "development": {
+                            "buildOptimizer": false,
+                            "optimization": false,
+                            "vendorChunk": true,
+                            "extractLicenses": false,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "fileReplacements": [
+                              {
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.development.ts"
+                              }
+                            ]
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "fuse:build:production"
+                        },
+                        "development": {
+                            "browserTarget": "fuse:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "fuse:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "polyfills": [
+                            "zone.js",
+                            "zone.js/testing"
+                        ],
+                        "tsConfig": "tsconfig.spec.json",
+                        "inlineStyleLanguage": "scss",
+                        "assets": [
+                            "src/favicon-16x16.png",
+                            "src/favicon-32x32.png",
+                            "src/assets"
+                        ],
+                        "styles": [
+                            "src/styles/styles.scss"
+                        ],
+                        "scripts": []
+                    }
+                }
+            }
+        },
+        "chatbot": {
+          "projectType": "application",
+          "schematics": {
+            "@schematics/angular:component": {
+              "style": "scss"
+            }
+          },
+          "root": "projects/chatbot",
+          "sourceRoot": "projects/chatbot/src",
+          "prefix": "chatbot",
+          "architect": {
+            "build": {
+              "builder": "@angular-devkit/build-angular:browser",
+              "options": {
+                "outputPath": "dist/chatbot",
+                "index": "projects/chatbot/src/index.html",
+                "main": "projects/chatbot/src/main.ts",
+                "polyfills": [
+                  "zone.js"
+                ],
+                "tsConfig": "projects/chatbot/tsconfig.app.json",
+                "inlineStyleLanguage": "scss",
+                "assets": [
+                  "projects/chatbot/src/favicon.ico",
+                  "projects/chatbot/src/assets"
+                ],
+                "styles": [
+                  "projects/chatbot/src/styles.scss"
+                ],
+                "scripts": []
+              },
+              "configurations": {
+                "production": {
+                  "optimization":  { "scripts": true, "styles": true, "fonts": false },
+                  "budgets": [
+                    {
+                      "type": "initial",
+                      "maximumWarning": "1mb",
+                      "maximumError": "2mb"
+                    },
+                    {
+                      "type": "anyComponentStyle",
+                      "maximumWarning": "1mb",
+                      "maximumError": "2mb"
+                    }
+                  ],
+                  "outputHashing": "all"
+                },
+                "development": {
+                  "buildOptimizer": false,
+                  "optimization":  { "scripts": true, "styles": true, "fonts": false },
+                  "vendorChunk": true,
+                  "extractLicenses": false,
+                  "sourceMap": true,
+                  "namedChunks": true
+                }
+              },
+              "defaultConfiguration": "production"
+            },
+            "serve": {
+              "builder": "@angular-devkit/build-angular:dev-server",
+              "configurations": {
+                "production": {
+                  "browserTarget": "chatbot:build:production"
+                },
+                "development": {
+                  "browserTarget": "chatbot:build:development"
+                }
+              },
+              "defaultConfiguration": "development"
+            },
+            "extract-i18n": {
+              "builder": "@angular-devkit/build-angular:extract-i18n",
+              "options": {
+                "browserTarget": "chatbot:build"
+              }
+            },
+            "test": {
+              "builder": "@angular-devkit/build-angular:karma",
+              "options": {
+                "polyfills": [
+                  "zone.js",
+                  "zone.js/testing"
+                ],
+                "tsConfig": "projects/chatbot/tsconfig.spec.json",
+                "inlineStyleLanguage": "scss",
+                "assets": [
+                  "projects/chatbot/src/favicon.ico",
+                  "projects/chatbot/src/assets"
+                ],
+                "styles": [
+                  "projects/chatbot/src/styles.scss"
+                ],
+                "scripts": []
+              }
+            }
+          }
+        }
+    },
+    "cli": {
+      "analytics": false
+    }
+}

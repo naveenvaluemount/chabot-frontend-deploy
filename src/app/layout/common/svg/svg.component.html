@@ -1,0 +1,54 @@
+<div class="flex flex-col shadow-xl rounded-lg">
+    <div class="flex items-center px-4 h-12 text-white rounded-t-lg" [style.background-color]="theme.windowTitleBackgroundColor">
+        <div class="h-6 w-6 bg-white rounded-full mr-3"></div>
+       <div>
+        <div class="h-1 w-20 rounded mb-1" [style.background-color]="theme.windowTitleTextColor"></div>
+        <div class="h-0.5 w-10 rounded" [style.background-color]="theme.windowTitleTextColor"></div>
+       </div>
+    </div>
+    <div class="flex flex-col p-4 bg-gray-100 text-current">
+        <div class="flex justify-end py-2">
+            <div class="flex flex-col items-end p-3 rounded-b-lg rounded-l-lg" [style.background-color]="theme.messageBackgroundColor">
+                <div class="h-0.5 w-30 rounded mb-1" [style.background-color]="theme.userMessageTextColor"></div>
+                <div class="h-0.5 w-10 rounded" [style.background-color]="theme.userMessageTextColor"></div>
+            </div>
+            <div class="h-6 w-6 rounded-full ml-3" [style.background-color]="theme.messageBackgroundColor"></div>
+        </div>
+        <div class="flex justify-start py-2">
+            <div class="h-6 w-6 rounded-full mr-3" [style.background-color]="theme.chatbotBackgroundColor"></div>
+            <div class="flex flex-col items-start p-3 rounded-b-lg rounded-r-lg" [style.background-color]="theme.chatbotBackgroundColor">
+                <div class="h-0.5 w-30 rounded mb-1" [style.background-color]="theme.chatbotTextColor"></div>
+                <div class="h-0.5 w-10 rounded" [style.background-color]="theme.chatbotTextColor"></div>
+            </div>
+        </div>
+        <div class="flex justify-end py-2">
+            <div class="flex flex-col items-end p-3 rounded-b-lg rounded-l-lg" [style.background-color]="theme.messageBackgroundColor">
+                <div class="h-0.5 w-30 rounded mb-1" [style.background-color]="theme.userMessageTextColor"></div>
+                <div class="h-0.5 w-10 rounded" [style.background-color]="theme.userMessageTextColor"></div>
+            </div>
+            <div class="h-6 w-6 rounded-full ml-3" [style.background-color]="theme.messageBackgroundColor"></div>
+        </div>
+        <div class="flex justify-start py-2">
+            <div class="h-6 w-6 rounded-full mr-3" [style.background-color]="theme.chatbotBackgroundColor"></div>
+            <div class="flex flex-col items-start p-3 rounded-b-lg rounded-r-lg" [style.background-color]="theme.chatbotBackgroundColor">
+                <div class="h-0.5 w-30 rounded mb-1" [style.background-color]="theme.chatbotTextColor"></div>
+                <div class="h-0.5 w-10 rounded" [style.background-color]="theme.chatbotTextColor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="flex items-center p-4 bg-white text-current rounded-b-lg">
+        <div>
+            <div class="h-1 w-40 bg-gray-200 rounded mb-1"></div>
+            <div class="h-0.5 w-30 bg-gray-200 rounded"></div>
+        </div>
+        <div class="flex ml-auto group">
+            <div class="flex items-center group-hover:hidden justify-center h-8 w-8 rounded-full" [style.background-color]="theme.buttonBackgroundColor">
+                <div class="flex h-3 w-3 rounded-full" [style.background-color]="theme.buttonTextColor"></div>
+                </div>
+                <div class="hidden group-hover:flex items-center justify-center h-8 w-8 rounded-full" [style.background-color]="theme.buttonHoverBackgroundColor">
+                <div class="flex h-3 w-3 rounded-full" [style.background-color]="theme.buttonHoverTextColor"></div>
+                </div>
+        </div>
+     
+    </div>
+</div>

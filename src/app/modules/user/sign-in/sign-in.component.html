@@ -1,0 +1,99 @@
+<app-auth-layout heading="Sign In" bg="assets/images/banner.jpg">
+    <fuse-alert class="mt-8" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type" [@shake]="alert.type === 'error'"> {{alert.message}} </fuse-alert> 
+    <form
+        class="mt-8 grid grid-cols-1 gap-5"
+        [formGroup]="signInForm"
+        #signInNgForm="ngForm">
+        <mat-form-field appearance="outline" hideRequiredMarker>
+            <mat-icon matPrefix [svgIcon]="'heroicons_outline:user'"></mat-icon>
+            <mat-label>Email Address</mat-label>
+            <input data-cy="userName" id="email" matInput [formControlName]="'userName'" >
+            <mat-error *ngIf="signInForm.get('userName').hasError('required')">Required </mat-error>
+            <mat-error *ngIf="signInForm.get('userName').hasError('email')">Invalid Email Address</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" hideRequiredMarker>
+            <mat-icon matPrefix [svgIcon]="'heroicons_outline:key'"></mat-icon>
+            <mat-label>Password</mat-label>
+            <input data-cy="password" id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+            <button class="mr-2" mat-icon-button type="button" (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'" matSuffix>
+                <mat-icon class="icon-size-5"  *ngIf="passwordField.type === 'password'" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'" [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+            </button>
+            <mat-error>Required </mat-error>
+        </mat-form-field>
+        <div class="grid grid-cols-1 gap-3">
+           
+        <button data-cy="signIn" class="fuse-mat-button-large" mat-flat-button [color]="'primary'" [disabled]="signInForm.disabled" (click)="signIn()">
+            <span *ngIf="!signInForm.disabled"> Sign In </span>
+            <mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+        </button> 
+        <button data-cy="signup" class="fuse-mat-button-large" mat-flat-button [color]="'primary'" (click)="signUp(signup)">
+            <span *ngIf="!signInForm.disabled"> Sign Up </span>
+            <mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+        </button> 
+        <a mat-stroked-button class="fuse-mat-button-large" [routerLink]="['/forgot-password']">Forgot Password? </a>
+        </div>
+    </form>
+</app-auth-layout>
+ 
+
+<!-- signup -->
+<ng-template #signup>
+    <h1 mat-dialog-title class="font-bold text-2xl">SignUp</h1>
+    <div mat-dialog-content>
+        <form class="mt-8 grid grid-cols-1 gap-5" [formGroup]="signUpForm" #signInNgForm="ngForm">
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <mat-icon matPrefix [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                <mat-label>Firstname</mat-label>
+                <input data-cy="firstname" id="firstname" matInput [formControlName]="'firstname'">
+                <mat-error *ngIf="signUpForm.get('firstname')?.hasError('required')">Required </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <mat-icon matPrefix [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                <mat-label>lastname</mat-label>
+                <input data-cy="lastname" id="lastname" matInput [formControlName]="'lastname'">
+                <mat-error *ngIf="signUpForm.get('lastname')?.hasError('required')">Required </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <mat-icon matPrefix [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                <mat-label>Username</mat-label>
+                <input data-cy="userName" id="email" matInput [formControlName]="'username'">
+                <mat-error *ngIf="signUpForm.get('userName')?.hasError('required')">Required </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <mat-icon matPrefix [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                <mat-label>Email Address</mat-label>
+                <input data-cy="email" id="email" matInput [formControlName]="'email'">
+                <mat-error *ngIf="signUpForm.get('email')?.hasError('required')">Required </mat-error>
+                <mat-error *ngIf="signUpForm.get('email')?.hasError('email')">Invalid Email Address</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" hideRequiredMarker>
+                <mat-icon matPrefix [svgIcon]="'heroicons_outline:key'"></mat-icon>
+                <mat-label>Password</mat-label>
+                <input data-cy="password" id="password" matInput type="password" [formControlName]="'password'"
+                    #passwordField>
+                <button class="mr-2" mat-icon-button type="button"
+                    (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                    matSuffix>
+                    <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                        [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                    <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                        [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                </button>
+                <mat-error>Required </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+    <div mat-dialog-actions>
+        <div class="grid grid-cols-1 gap-3">
+
+            <button data-cy="signup" mat-flat-button [color]="'primary'" [disabled]="signUpForm.disabled"
+                (click)="register()">
+                <span *ngIf="!signUpForm.disabled"> Sign Up </span>
+                <mat-progress-spinner *ngIf="signUpForm.disabled" [diameter]="24"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
+            <button (click)="close()">Cancel</button>
+        </div>
+    </div>
+</ng-template>

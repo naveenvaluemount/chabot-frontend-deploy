@@ -1,0 +1,34 @@
+<chatbot-toggle [ngClass]="{'expanded':expanded}" (onToggle)="onToggle($event)"></chatbot-toggle>
+<chatbot-popup [ngClass]="{'expanded':expanded}">
+    <chatbot-header></chatbot-header>
+    <chatbot-body>
+        <chatbot-holder> 
+
+            <chatbot-row *ngFor="let item of chatHistory" [type]="item.responseType">
+                <chatbot-avtar name="MS"></chatbot-avtar>
+                <ng-container *ngIf="item.type == 'category'">
+                    <chatbot-list [data]="item?.data" (onSelect)="onCategorySelect($event)"></chatbot-list>
+                </ng-container>
+                <ng-container *ngIf="item.type == 'prompt'">
+                    <chatbot-prompts [data]="item?.data[0]" (onSelect)="onPromptSelect($event)"></chatbot-prompts>
+                </ng-container>
+               
+                <ng-container *ngIf="item.type == 'message' || item.type == 'faq'">
+                    <chatbot-message [content]="item?.data"></chatbot-message>
+                </ng-container>
+                
+            </chatbot-row>
+
+            <chatbot-row type="answer" *ngIf="spinner">
+                <chatbot-avtar name="MS"></chatbot-avtar>
+                <chatbot-message>
+                    <chatbot-spinner></chatbot-spinner>
+                </chatbot-message>
+            </chatbot-row>
+           
+
+     
+        </chatbot-holder>
+    </chatbot-body>
+    <chatbot-footer (onKeyPress)="onKeyPress($event)"></chatbot-footer>
+</chatbot-popup>

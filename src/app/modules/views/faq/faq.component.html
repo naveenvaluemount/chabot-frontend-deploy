@@ -1,0 +1,181 @@
+<app-crud
+[isEmpty]="isEmpty"
+[isLoaded]="isLoaded"
+[breadcrumbs]="breadcrumbs"
+[rows]="faqs"
+[columns]="columns"
+[formTemplate]="formTemplate"
+[filterTemplate]="filterTemplate"
+[pagination]="params"
+(onPageChange)="onPageChange($event)"
+(onSubmit)="onSubmit()"
+(onUpdate)="onUpdate()"
+(onApply)= "onApply()"
+(onChange)="onChange($event)"
+(onSearch)="onSearch($event)"
+>
+</app-crud>
+
+<ng-template #qnaTemp let-row="row">
+    <div class="flex items-center" role="button">
+        <div [attr.acronym]="row?.clientName"></div>
+        <div class=" mr-auto">
+            <div *ngFor=" let qns of row.questions">
+                <div class="text-sm text-gray-400">{{row.questions[0]?.name}}</div>
+            </div>
+            <div class="font-semibold">{{row?.answer}}</div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Action Template -->
+<ng-template #actionsTemp let-row="row">
+    <div class="flex items-center">
+        <button type="button" mat-icon-button (click)="deleteFn(row)" matTooltip="Delete" data-cy="delete" ><mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon></button>
+        <!-- <div  class="h-10 w-10 inline-flex items-center justify-center"><div class="h-1 w-1 rounded-full bg-gray-300"></div></div> -->
+        <button type="button" mat-icon-button (click)="updateFn(row)" matTooltip="Update" data-cy="edit"><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
+    </div>
+    </ng-template>
+
+    <ng-template #createdOnTemp let-row="row">
+        {{ row.createdTime  }}
+    </ng-template>
+
+    <ng-template #updatedOnTemp let-row="row">
+        {{ row.createdTime  }}
+    </ng-template>
+
+<!-- filter Template -->
+<ng-template #filterTemplate>
+    <form [formGroup]="form">
+        <div>
+            <mat-form-field class="w-full" hideRequiredMarker>
+                <mat-label>Status</mat-label>
+                <mat-select data-cy="status" formControlName="status">
+                    <mat-option [value]="true">Active</mat-option>
+                    <mat-option [value]="false">Inactive</mat-option>
+                  </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+</ng-template>
+
+<!-- Add/Update Faqs -->
+<ng-template #formTemplate>
+    <form [formGroup]="form">
+         <div class="grid grid-cols-1 gap-4">
+            <div>
+            <mat-form-field class="w-full" hideRequiredMarker>
+                <mat-label>FAQ Title</mat-label>
+                <input matInput formControlName="title" data-cy="title">
+                <mat-error *ngIf="form.get('title').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>FAQ Type</mat-label>
+                    <mat-select name="status" formControlName="loginTypesId">
+                      <mat-option *ngFor="let type of faqTypeList" [value]="type.value"  >
+                        {{type.name}}
+                      </mat-option>
+                    </mat-select>
+
+                <mat-error *ngIf="form.get('loginTypesId').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+        <div>
+            <mat-label class="flex items-center mb-2">Questions <mat-icon class="ml-auto" svgIcon="heroicons_outline:plus" (click)="addQuestions()" role="button"></mat-icon> </mat-label>
+            <div formArrayName="questions"  class="grid grid-cols-1 gap-2">
+
+                <div *ngFor="let quest of form.get('questions')['controls']; index as i" [formGroupName]="i" >
+
+                    <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                        <input matInput formControlName="name" data-cy="questions">
+                        <mat-icon svgIcon="heroicons_outline:trash" (click)="form.get('questions')['controls'].length > 1 && removeQuestions(i)" role="button"></mat-icon>
+                            <mat-error *ngIf="quest.get('name').hasError('required') && quest.get('name').touched">*Required </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div>
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Answer</mat-label>
+                <textarea matInput formControlName="answer" data-cy="answer"></textarea>
+            </mat-form-field>
+            <mat-error *ngIf="form.get('answer').hasError('required') && form.get('answer').touched">*Required </mat-error>
+        </div>
+
+        <div>
+            <mat-label  class="flex items-center mb-2">Meta Data <mat-icon class="ml-auto" svgIcon="heroicons_outline:plus" (click)="addPremices()" role="button"></mat-icon>
+            </mat-label>
+            <div formArrayName="qnaPrompts" class="grid grid-cols-1 gap-2">
+    
+                <div *ngFor="let quest of form.get('qnaPrompts')['controls']; index as i" [formGroupName]="i" >
+    <!--
+                    <mat-form-field hideRequiredMarker>
+                        <mat-label>Title</mat-label>
+                        <mat-select data-cy="qnaPrompts" formControlName="faqId">
+                            <div *ngFor="let faq of faqs">
+                                <mat-option *ngFor="let qts of faq.questions" [value]="faq.faqId">{{qts.name}}</mat-option>
+                            </div>
+                          </mat-select>
+                    </mat-form-field> -->
+    
+                    <mat-form-field class="w-full" subscriptSizing='dynamic'>
+                        <!-- <mat-label>Display Text</mat-label> -->
+                        <input matInput formControlName="displayText" data-cy="displayText">
+                        <mat-icon svgIcon="heroicons_outline:trash" role="button" (click)="form.get('qnaPrompts')['controls'].length > 1 && removePremices(i)"></mat-icon>
+                    </mat-form-field>
+    <!--
+                    <mat-form-field class="ml-4">
+                        <mat-label>Display Order</mat-label>
+                        <input matInput formControlName="displayOrder" data-cy="displayOrder">
+                    </mat-form-field> -->
+                    <!-- <i role="button" class="fa fa-times-circle"
+                    (click)="form.get('qnaPrompts')['controls'].length > 1 && removePremices(i)"
+                    style="font-size: 18px;color:#ff0000;margin-left:10px" title="Remove Premices"> -->
+                    <!-- </i> -->
+    
+                </div>
+            </div>
+        </div>
+
+    </div>
+  
+    <!-- <div>
+        <mat-label>Prompts <mat-icon svgIcon="heroicons_outline:plus-circle" (click)="addPremices()"></mat-icon>
+        </mat-label>
+        <div formArrayName="qnaPrompts" class="mt-3">
+
+            <div *ngFor="let quest of form.get('qnaPrompts')['controls']; index as i" [formGroupName]="i" >
+
+                <mat-form-field hideRequiredMarker>
+                    <mat-label>Title</mat-label>
+                    <mat-select data-cy="qnaPrompts" formControlName="faqId">
+                        <div *ngFor="let faq of faqs">
+                            <mat-option *ngFor="let qts of faq.questions" [value]="faq.faqId">{{qts.name}}</mat-option>
+                        </div>
+                      </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="ml-4">
+                    <mat-label>Display Text</mat-label>
+                    <input matInput formControlName="displayText" data-cy="displayText">
+                </mat-form-field>
+
+                <mat-form-field class="ml-4">
+                    <mat-label>Display Order</mat-label>
+                    <input matInput formControlName="displayOrder" data-cy="displayOrder">
+                </mat-form-field>
+                <mat-icon svgIcon="heroicons_outline:trash" (click)="form.get('qnaPrompts')['controls'].length > 1 && removePremices(i)"></mat-icon>
+            </div>
+        </div>
+    </div> -->
+    </form>
+</ng-template>
+

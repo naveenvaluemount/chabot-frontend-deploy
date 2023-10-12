@@ -1,0 +1,147 @@
+
+    <div
+        class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-4 sm:px-8 border-b bg-card dark:bg-transparent">
+      <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
+        <div class="flex item-center gap-2">
+
+            <ng-container *ngIf="filterTemplate">
+
+                <div class="relative" *ngIf="searchToggle">
+                    <input autoFocus
+                    class="border-solid border-2 focus:border-indigo-600 rounded-full px-5 py-2"
+                    [placeholder]="'Search'"
+                    [formControl]="searchControl"
+                    (keyup)= "search(searchControl)"
+                      >
+                     <mat-icon class="absolute right-3 top-1/2 -translate-y-1/2 icon-size-5" [svgIcon]="'heroicons_outline:x-mark'" (click)="searchToggleFn()" role="button"></mat-icon>
+                </div>
+
+
+
+                <button *ngIf="!searchToggle" type="button" mat-icon-button (click)="searchToggleFn()"><mat-icon [svgIcon]="'heroicons_outline:magnifying-glass'" ></mat-icon></button>
+
+            </ng-container>
+            <ng-container *ngIf="filterTemplate">
+                <button data-cy="filters" type="button" (click)="filterToggle()" mat-icon-button><mat-icon [svgIcon]="'heroicons_outline:adjustments-vertical'"></mat-icon></button>
+            </ng-container>
+            <ng-container *ngIf="actionsTemplate">
+                <ng-container *ngTemplateOutlet="actionsTemplate"></ng-container>
+            </ng-container>
+            <button data-cy="back" type="button" (click)="back()" mat-stroked-button color="primary">Back <mat-icon [svgIcon]="'heroicons_outline:chevron-left'" class="icon-size-4"></mat-icon></button>
+            <ng-container *ngIf="formTemplate">
+                <button data-cy="addNew" type="button" (click)="toggle(null)" mat-flat-button color="primary">Add New <mat-icon [svgIcon]="'heroicons_outline:plus'" class="icon-size-4"></mat-icon></button>
+            </ng-container>
+            <ng-container *ngIf="whatsAppTemplate">
+                <button data-cy="addNew" type="button" (click)="toggle(null)" mat-flat-button color="primary">Add Template <mat-icon [svgIcon]="'heroicons_outline:plus'" class="icon-size-4"></mat-icon></button>
+            </ng-container>
+        </div>
+    </div>
+    <!-- Main -->
+    <ng-container *ngIf="!gridTemplate; else grid">
+        <ng-container [ngTemplateOutlet]="table"></ng-container>
+        <mat-paginator *ngIf="!isEmpty"
+        (page)="pageChange($event)"
+        [length]="pagination.pageCount"
+        [pageSize]="pagination.pageSize"
+        [pageIndex]="pagination.pageNumber"
+        [pageSizeOptions]="pagination.pageSizes"
+        class="border-t bg-white"></mat-paginator>
+    </ng-container>
+
+<fuse-drawer
+class="crud"
+    [ngClass]="{'hidden':!drawer}"
+    [fixed]="true"
+    [mode]="'over'"
+    [name]="'crud drawer'"
+    [opened]="drawer"
+    [position]="'right'"
+    (openedChanged)="openedChanged($event)"
+    [transparentOverlay]="false">
+    <app-dialog>
+        <app-dialog-header [title]="!isEditable? 'Add New' : 'Update'">
+            <button data-cy="close" type="button" mat-icon-button class="-mr-5" (click)="toggle(null)"><mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon></button>
+        </app-dialog-header>
+        <app-dialog-body *ngIf="formTemplate || whatsAppTemplate">
+            <ng-container *ngTemplateOutlet="formTemplate || whatsAppTemplate"></ng-container>
+        </app-dialog-body>
+        <app-dialog-footer>
+            <button data-cy="cancel" type="button" mat-stroked-button color="primary" (click)="toggle(null)">Cancel</button>
+            <button [attr.data-cy]="!isEditable? 'add' : 'update'" type="button" mat-flat-button color="primary"   (click)="submit(!isEditable? 'add' : 'update')">{{!isEditable? 'Add' : 'Update'}}</button>
+       </app-dialog-footer>
+    </app-dialog>
+</fuse-drawer>
+
+<fuse-drawer
+class="filter"
+    [ngClass]="{'hidden':!filter}"
+    [fixed]="true"
+    [mode]="'over'"
+    [name]="'filter drawer'"
+    [opened]="filter"
+    [position]="'right'"
+    (openedChanged)="openedChanged($event)"
+    [transparentOverlay]="false">
+    <app-dialog>
+        <app-dialog-header title="Filters">
+            <button data-cy="close" type="button" mat-icon-button class="-mr-5" (click)="filterToggle()"><mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon></button>
+        </app-dialog-header>
+        <app-dialog-body *ngIf="filterTemplate">
+            <ng-container *ngTemplateOutlet="filterTemplate"></ng-container>
+        </app-dialog-body>
+        <app-dialog-footer>
+            <button data-cy="cancel" type="button" mat-stroked-button color="primary" (click)="filterToggle()">Cancel</button>
+            <button data-cy="apply" type="button" mat-flat-button color="primary"   (click)="applyFilter()">Apply</button>
+        </app-dialog-footer>
+    </app-dialog>
+</fuse-drawer>
+<ng-template #table>
+<ng-container *ngIf="isLoaded && !isEmpty">
+    <div class="flex flex-auto overflow-hidden fadeIn" >
+        <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
+            <div class="bg-white" matSort matSortDisableClear (matSortChange)="sortData($event)">
+                <div class="flex flex-col">
+                    <div class="flex items-center bg-gray-50 text-gray-400 border-b px-8 h-14 text-sm z-10 sticky top-0">
+                        <div class="flex-1" [attr.data-cy]="'th--'+column.prop" [ngClass]="column.class" [mat-sort-header]="column.prop" [disabled]="!column.sort" *ngFor="let column of columns">{{column.name}}</div>
+                    </div>
+                    <div class="flex items-center bg-white border-b px-8 h-15" *ngFor="let item of rows">
+                        <div class="flex-1 truncate" [attr.data-cy]="'td--'+item[column.prop]" [ngClass]="column.class" *ngFor="let column of columns">
+                            <ng-container *ngIf="column.cellTemplate">
+                                <ng-container [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{row:item}"></ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="!column.cellTemplate">{{item[column.prop] || 'N/A'}}</ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="isLoaded && isEmpty"><ng-container [ngTemplateOutlet]="nodata"></ng-container></ng-container>
+<ng-container *ngIf="!isLoaded"><ng-container [ngTemplateOutlet]="loader"></ng-container></ng-container>
+  </ng-template>
+  <ng-template #grid>
+    <ng-container *ngIf="isLoaded && !isEmpty">
+        <div class="flex flex-auto overflow-hidden fadeIn bg-gray-50" >
+            <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
+                <ng-container [ngTemplateOutlet]="gridTemplate"></ng-container>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="isLoaded && isEmpty"><ng-container [ngTemplateOutlet]="nodata"></ng-container></ng-container>
+<ng-container *ngIf="!isLoaded"><ng-container [ngTemplateOutlet]="loader"></ng-container></ng-container>
+</ng-template>
+<ng-template #nodata>
+    <div class="flex flex-auto flex-col p-8 items-center justify-center text-center fadeIn bg-gray-50">
+       <div><img src="assets/images/empty.svg" class="h-50 mb-5"/></div>
+       <div class="text-2xl font-bold">No Data Available.</div>
+       <p class="text-sm text-current mb-4 opacity-75">There is no data to show you right now.</p>
+       <button data-cy="addNew" type="button" (click)="toggle(null)" mat-button color="primary">Add New <mat-icon [svgIcon]="'heroicons_outline:plus'" class="icon-size-4"></mat-icon></button>
+    </div>
+   </ng-template>
+   <ng-template #loader>
+    <div class="flex flex-auto flex-col p-8 items-center justify-center text-center fadeIn bg-gray-50">
+        <mat-spinner strokeWidth="2" diameter="50"></mat-spinner>
+     </div>
+
+   </ng-template>

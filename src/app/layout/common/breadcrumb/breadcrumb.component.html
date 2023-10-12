@@ -1,0 +1,22 @@
+<div class="flex-1 min-w-0">
+    <!-- Title -->
+    <div class="mb-2">
+        <h2 class="text-2xl md:text-2xl font-extrabold leading-none truncate">
+            <ng-container *ngFor="let item of breadcrumbs; let last = last">
+                <ng-container *ngIf="last">{{item.name}}</ng-container>
+            </ng-container>
+        </h2>
+    </div>
+    <!-- Breadcrumbs -->
+    <div class="flex flex-wrap items-center font-medium">
+        <ng-container *ngFor="let item of breadcrumbs; let last = last">
+            <ng-container *ngIf="!last">
+            <a class="text-primary-500" [routerLink]="item.link">{{item.name}}</a>
+            <mat-icon class="icon-size-4 text-current opacity-50" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+            </ng-container>
+            <ng-container *ngIf="last">
+            <span class="text-current opacity-50">{{item.name}}</span>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
