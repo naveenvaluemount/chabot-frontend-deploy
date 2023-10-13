@@ -4,6 +4,6 @@ export const environment = {
     production: true,
     api:'/api/',
     // baseurl:'https://web-msrchatbot-qa01.azurewebsites.net',
-    baseurl:'https://web-msrchatbot-qa01.azurewebsites.net',
+    baseurl:'https://chatbot-tu3x.onrender.com',
     endpoints: endpoints
 };
