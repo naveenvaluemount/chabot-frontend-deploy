@@ -112,15 +112,15 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     this.api.allOrgs(params).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
       if (data.statusCode === 200) {
         this.isLoaded = true;
-        if (data.response.statusCode === 200) {
+        if (data.statusCode === 200) {
           this.isEmpty = false;
-          this.orgs = data.response.response;
-          this.params.pageCount = data.response.count;
-          if(data.response.count == 0){
-            this.isEmpty = true;
-          }else{
-            this.isEmpty = false;
-          }
+          this.orgs = data.response;
+          // this.params.pageCount = data.response.count;
+          // if(data.response.count == 0){
+          //   this.isEmpty = true;
+          // }else{
+          //   this.isEmpty = false;
+          // }
         }
       }
     });
@@ -145,7 +145,7 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     if (this.form.valid) {
       this.api.createOrg(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('Org Added', null, { duration: 1000 })
@@ -161,7 +161,7 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     if (this.form.valid) {
       this.api.createOrg(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('Org Updated', null, { duration: 1000 })
@@ -183,15 +183,15 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
       console.log(item)
     this.crud.toggle("edit");
     this.form.patchValue(item)
-    this.form.get("id").setValue(item.id);
+    this.form.get("id").setValue(item._id);
   }
   deleteFn(item: any) {
     let dialogRef = this.fcs.open();
     dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe)).subscribe((result) => {
       if (result === 'confirmed') {
-        this.api.deleteOrg(item.id).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
+        this.api.deleteOrg(item._id).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
           if (data.statusCode === 200) {
-            if (data.response.statusCode === 200) {
+            if (data.statusCode === 200) {
               this.isLoaded = false;
               this.snackbar.open('Org Deleted', null, { duration: 1000 })
               this.getList();

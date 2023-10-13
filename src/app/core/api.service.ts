@@ -14,7 +14,7 @@ export class ApiService {
   set accessToken(token: string) {
     localStorage.setItem('accessToken', token);
   }
-  get accessToken(): string {
+  get accessToken(): any {
     return localStorage.getItem('accessToken') ?? '';
   }
   set refreshToken(token: string) {
@@ -51,8 +51,8 @@ export class ApiService {
   login(fb: any): Observable<any> {
     return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.users.login}`, fb).pipe(
       switchMap((response: any) => {
-        this.addSession(response.response.accessToken.Authorization, response.response.accessToken.REFRESH_TOKEN);
-        this.userData = response.response.data;
+        // this.addSession(response.response.accessToken.Authorization, response.response.accessToken.REFRESH_TOKEN);
+        // this.userData = response.response.data;
         return of(response)
       })
     );
@@ -61,7 +61,7 @@ export class ApiService {
     return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.users.register}`, fb).pipe(
       switchMap((response: any) => {
         // this.addSession(response.response.accessToken.Authorization, response.response.accessToken.REFRESH_TOKEN);
-        // this.userData = response.response.data;
+        this.userData = response.response;
         return of(response)
       })
     );
@@ -188,17 +188,21 @@ export class ApiService {
 
   signedInRedirect(data) {
 
+    if (data) {
+      this.router.navigate(['/superadmin'])
+    } else{
+      this.router.navigate(['/sign-in'])
+    }
+
     // if (this.isSuperAdmin()) {
       // this.router.navigate(['/superadmin'])
     // }
     // if (this.isAdmin()) {
     //   this.router.navigate(['/admin'])
-    // }else{
-    //   this.router.navigate(['/superadmin'])
     // }
       // this.router.navigate(['/admin'])
       // this.router.navigate(['/superadmin'])
-      this.router.navigate(['/sign-in'])
+      // this.router.navigate(['/sign-in'])
   }
 
 

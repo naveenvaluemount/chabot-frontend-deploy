@@ -24,7 +24,6 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status === 406) {
           return this.handle401Error(request, next);
         } else {
-        
             switch (error.status) {
                 case 400:
                     this.snackbar.open(error.error.errorMsg ? error.error.errorMsg : 'Bad Request!',null, { duration: 3000, panelClass:'snackbar-error' });
