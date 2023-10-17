@@ -27,8 +27,9 @@ export class OrganizationComponent {
   getCode(e: any) {
     this.dialog.open(CodeSnippetComponent, { width: '1350px', data: this.organization?.secret })
   }
+  
   getPublish(e: any) {
-    this.dialog.open(PublishComponent, { width: '300px', data: this.organization?.id })
+    this.dialog.open(PublishComponent, { width: '300px', data: {id: this.organization?.id, content: 'Do you Want To Publish This Organization?'} })
   }
   getOrganizations() {
     this.api.allOrgs({}).subscribe((data: any) => {
@@ -38,12 +39,14 @@ export class OrganizationComponent {
   }
   getOrganization(id: any) {
     this.organization = {
-      id: 41,
+      _id: 41,
       secret: '22854636952'
     }
     this.api.singleOrg(id).subscribe((data: any) => {
-      let { response: { response: results, statusCode: s2 }, statusCode: s1 } = data;
-      if (s1 === 200 && s2 === 200) { this.organization = results; }
+      // let { response: { response: results, statusCode: s2 }, statusCode: s1 } = data;
+      // if (s1 === 200 && s2 === 200) { this.organization = results; }
+      this.organization.id = data.response._id;
+      this.organization.secret = data.response.secret;
     })
   }
 }

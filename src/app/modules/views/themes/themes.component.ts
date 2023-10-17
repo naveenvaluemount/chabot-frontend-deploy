@@ -83,7 +83,7 @@ export class ThemesComponent extends Unsubscribe implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.api.addTheme(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('theme Added', null, { duration: 1000 })
@@ -99,7 +99,7 @@ export class ThemesComponent extends Unsubscribe implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.api.addTheme(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('theme Updated', null, { duration: 1000 });
@@ -121,10 +121,10 @@ export class ThemesComponent extends Unsubscribe implements OnInit, OnDestroy {
     this.api.allThemes(params).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
       if (data.statusCode === 200) {
         this.isLoaded = true;
-        if (data.response.statusCode === 200) {
+        if (data.statusCode === 200) {
           this.isEmpty = false;
-          this.themes = data.response.response;
-          this.params.pageCount = data.response.count;
+          this.themes = data.response;
+          this.params.pageCount = data.count;
           if(data.response.count == 0){
             this.isEmpty = true;
           }else{
@@ -149,16 +149,16 @@ onSearch(e: any) {
   updateFn(item: any) {
     this.crud.toggle("edit");
     this.form.patchValue(item)
-    this.form.get("themeId").setValue(item.themeId);
+    this.form.get("themeId").setValue(item._id);
     console.log(this.oid)
   }
   deleteFn(item: any) {
     let dialogRef = this.fcs.open();
     dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe)).subscribe((result) => {
       if (result === 'confirmed') {
-        this.api.deleteTheme(item.themeId, this.oid).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
+        this.api.deleteTheme(item._id, this.oid).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
           if (data.statusCode === 200) {
-            if (data.response.statusCode === 200) {
+            if (data.statusCode === 200) {
               this.isLoaded = false;
               this.snackbar.open('User Deleted', null, { duration: 1000 })
               this.getList(this.oid);

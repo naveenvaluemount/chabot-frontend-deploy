@@ -6,7 +6,7 @@ export const endpoints =  {
         read:'user/getAll',
         menu:'user/menu',
         login:'user/login',
-        register:'api/register',
+        register:'user/register',
         logout:'user/logout',
         changepassword:'user/password/change',
         refreshToken:'user/refreshToken'
@@ -49,5 +49,8 @@ export const endpoints =  {
     chatbot: {
         retrive: 'faqs/answer',
         category: 'category/getChild'
+    },
+    publish: {
+        publishOrg: 'publish/publishById/'
     }
 }

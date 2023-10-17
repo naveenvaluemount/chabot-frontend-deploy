@@ -186,6 +186,11 @@ export class ApiService {
   }
 
 
+  // Publish
+  publish(id: any): Observable<any> {
+    return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.publish.publishOrg}${id}`, {})
+  }
+
   signedInRedirect(data) {
 
     if (data) {

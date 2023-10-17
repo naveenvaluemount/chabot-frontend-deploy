@@ -45,7 +45,7 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     }
 ];
   form: FormGroup = this.fb.group({
-    email: [""],
+    // email: [""],
     firstName: ["", [Validators.required]],
     lastName: ["", [Validators.required]],
     orgIds: [[], [Validators.required]],
@@ -138,10 +138,10 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     this.api.allUsers(userParams).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
       if (data.statusCode === 200) {
         this.isLoaded = true;
-        if (data.response.statusCode === 200) {
+        if (data.statusCode === 200) {
           this.isEmpty = false;
-          this.users = data.response.response;
-          this.userParams.pageCount = data.response.count;
+          this.users = data.response;
+          this.userParams.pageCount = data?.count;
           if(data.response.count == 0){
             this.isEmpty = true;
           }else{
@@ -154,8 +154,8 @@ export class UsersComponent extends Unsubscribe implements OnInit {
   getOrgList() {
     this.api.allOrgs({}).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
       if (data.statusCode === 200) {
-        if (data.response.statusCode === 200) {
-          this.orgs = data.response.response;
+        if (data.statusCode === 200) {
+          this.orgs = data.response;
         }
       }
     });
@@ -164,7 +164,7 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     if (this.form.valid) {
       this.api.addUser(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('User Added', null, { duration: 1000 })
@@ -180,16 +180,17 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     this.crud.toggle("edit");
     this.form.patchValue(item)
 
-   let orgs = item.organizationDtos.map(x=>x.id);
+   let orgs = item.organizationDtos.map(x=>x._id);
     this.form.get("orgIds").setValue(orgs)
     console.log(item,this.form.value)
-    this.form.get("userId").setValue(item.userId);
+    // this.form.get("userId").setValue(item.userId);
+    this.form.get("userId").setValue(item._id);
   }
   onUpdate() {
     if (this.form.valid) {
       this.api.addUser(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('User Updated', null, { duration: 1000 })
@@ -205,9 +206,9 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     let dialogRef = this.fcs.open();
     dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe)).subscribe((result) => {
       if (result === 'confirmed') {
-        this.api.deleteUser(item.userId).subscribe((data: any) => {
+        this.api.deleteUser(item._id).subscribe((data: any) => {
           if (data.statusCode === 200) {
-            if (data.response.statusCode === 200) {
+            if (data.statusCode === 200) {
               this.isLoaded = false;
               this.snackbar.open('User Deleted', null, { duration: 1000 })
               this.getList();
@@ -230,9 +231,9 @@ export class UsersComponent extends Unsubscribe implements OnInit {
   }
 
   onChange(e: any) {
-    // if (!e) {
-    //   this.form.reset({status: this.form.get("status").value })
-    // }
+    if (!e) {
+      this.form.reset({status: this.form.get("status").value })
+    }
   }
 
   onPageChange(e: any) {

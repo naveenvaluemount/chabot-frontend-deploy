@@ -39,7 +39,7 @@
 <div class="flex items-center">
     <button type="button" mat-icon-button (click)="deleteFn(row)" matTooltip="Delete" data-cy="delete" [disabled]="row.publishedStatus"><mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon></button>
     <button type="button" mat-icon-button (click)="updateFn(row)" matTooltip="Update" data-cy="edit"><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
-    <button type="button" mat-icon-button [routerLink]="[row.id]"   matTooltip="view" data-cy="view"><mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon></button>
+    <button type="button" mat-icon-button [routerLink]="[row._id]"   matTooltip="view" data-cy="view"><mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon></button>
 </div>
 </ng-template>
 <ng-template #filterTemplate>

@@ -96,7 +96,7 @@
             <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
                 <mat-label>Organization</mat-label>
                 <mat-select data-cy="orgIds" multiple formControlName="orgIds">
-                    <mat-option *ngFor="let item of orgs" [value]="item.id">{{item.clientName}}</mat-option>
+                    <mat-option *ngFor="let item of orgs" [value]="item._id">{{item.clientName}}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="form.get('orgIds').hasError('required')">*Required </mat-error>
             </mat-form-field>

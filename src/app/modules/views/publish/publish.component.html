@@ -1,10 +1,12 @@
 
-
 <app-dialog class="-m-[24px]">
     <app-dialog-header title="Publish">
         <button type="button" mat-icon-button class="-mr-5" (click)="dialog.closeAll()"><mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon></button>
     </app-dialog-header>
     <app-dialog-body>
-        {{data}}
+        {{data.content}}
     </app-dialog-body>
+    <app-dialog-footer>
+        <button type="button" mat-icon-button class="-mr-5" (click)="publish()"><mat-icon [svgIcon]="'heroicons_outline:rocket-launch'"></mat-icon></button>
+    </app-dialog-footer>
 </app-dialog>
