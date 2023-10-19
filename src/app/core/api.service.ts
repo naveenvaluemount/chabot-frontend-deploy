@@ -191,6 +191,11 @@ export class ApiService {
     return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.publish.publishOrg}${id}`, {})
   }
 
+  //Un Publish
+  unPublish(id: any): Observable<any> {
+    return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.publish.UnPublishOrg}${id}`, {})
+  }
+
   signedInRedirect(data) {
 
     if (data) {

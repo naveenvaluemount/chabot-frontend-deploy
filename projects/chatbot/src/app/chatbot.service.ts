@@ -14,8 +14,11 @@ export class ChatbotService {
     return JSON.parse(localStorage.getItem("chatHistory")) || [];
   }
   constructor(private http: HttpClient) { }
-  validator(secret: any): Observable<any> {
-    return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.organization.validator}${secret}`, null);
+  // validator(secret: any): Observable<any> {
+  //   return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.organization.validator}${secret}`, null);
+  // }
+  validator(params: any): Observable<any> {
+    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.organization.validator}`, {params: params});
   }
   faq(id: any): Observable<any> {
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.faqs.single}${id}`);
@@ -25,6 +28,12 @@ export class ChatbotService {
   }
   initial(params: any) {
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.category}`, { params: params })
+  }
+  sendMessage(params: any) {
+    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.sendMessage}`, { params: params })
+  }
+  getMessages(id: any){
+    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.getMessages}${id}`)
   }
   setTheme(ele: any, theme: any) {
     ele.nativeElement.style.setProperty("--chatbot-window-backgound", theme?.windowTitleBackgroundColor);

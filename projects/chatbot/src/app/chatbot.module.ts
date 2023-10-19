@@ -18,6 +18,9 @@ import { ChatbotService } from './chatbot.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatbotPromptsComponent } from './chatbot-prompts/chatbot-prompts.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://172.21.3.57:8000', options: {} };
 
 @NgModule({
   declarations: [
@@ -39,7 +42,8 @@ import { ChatbotPromptsComponent } from './chatbot-prompts/chatbot-prompts.compo
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [ChatbotService],
   entryComponents: [ChatBotComponent]

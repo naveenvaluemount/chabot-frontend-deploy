@@ -16,7 +16,7 @@ export const endpoints =  {
         delete:'org/deleteById/',
         read:'org/allOrg',
         single:'org/getById/',
-        validator:'org/validator/',
+        validator:'org/validator',
 
     },
     categories:{
@@ -48,9 +48,12 @@ export const endpoints =  {
     },
     chatbot: {
         retrive: 'faqs/answer',
-        category: 'category/getChild'
+        category: 'category/getChild',
+        sendMessage: 'api/sendMessage',
+        getMessages: 'api/getMessages/'
     },
     publish: {
-        publishOrg: 'publish/publishById/'
+        publishOrg: 'publish/publishById/',
+        UnPublishOrg: 'publish/unPublishById/'
     }
 }

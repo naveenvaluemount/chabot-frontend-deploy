@@ -42,7 +42,7 @@ class="bg-white"
     [transparentOverlay]="false">
     <ng-container fuseVerticalNavigationContentFooter>
         <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{icon:'heroicons_outline:code-bracket',title:'Code',onclick:getCode.bind(this)}"></ng-container>
-        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{icon:'heroicons_outline:rocket-launch',title:'Publish',onclick:getPublish.bind(this)}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{icon:'heroicons_outline:rocket-launch',title:getTitle(),onclick:getPublish.bind(this)}"></ng-container>
     </ng-container>
     <!-- {
         id: 'code',
@@ -85,7 +85,7 @@ class="bg-white"
         <div class="m-[4px_8px_0_8px]">
             <a class="flex flex-col justify-center items-center rounded-[6px] p-[12px] hover:bg-black/5" (click)="onclick($event)">
                 <mat-icon [svgIcon]="icon || 'heroicons_outline:home'"></mat-icon>
-                <span class="mt-[8px] text-[12px]">{{title || 'Title'}}</span>
+                <span class="mt-[8px] text-[12px]">{{ title   || 'Title'}}</span>
             </a>
         </div>
     </div>

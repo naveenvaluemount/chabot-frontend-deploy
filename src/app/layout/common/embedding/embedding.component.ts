@@ -20,8 +20,8 @@ export class EmbeddingComponent {
   embedd(url:any){
     let chatbot = this.renderer2.createElement("script");
     this.renderer2.setAttribute(chatbot,"src",url);
-    this.renderer2.setAttribute(chatbot,"CLIENTID","81a9ab4f$aa8f$46a5$8ce7$7e578b1dc385");
-    this.renderer2.appendChild(document.body,chatbot)
+    this.renderer2.setAttribute(chatbot,"CLIENTID","652e4d2a47833867cfa37a4c-d99b9ebaea463af4ae4f47285b3acf19");
+    this.renderer2.appendChild(document.body,chatbot);
   }
 
 }

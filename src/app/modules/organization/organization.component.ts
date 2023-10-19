@@ -29,7 +29,7 @@ export class OrganizationComponent {
   }
   
   getPublish(e: any) {
-    this.dialog.open(PublishComponent, { width: '300px', data: {id: this.organization?.id, content: 'Do you Want To Publish This Organization?'} })
+    this.dialog.open(PublishComponent, { width: '300px', data: {id: this.organization?.id, content: `Do you Want To ${this.organization.publishedStatus ? 'Un Publish' : 'Publish'} This Organization?`, status: this.organization.publishedStatus, org: this.getOrganization(this.organization.id)} })
   }
   getOrganizations() {
     this.api.allOrgs({}).subscribe((data: any) => {
@@ -40,13 +40,19 @@ export class OrganizationComponent {
   getOrganization(id: any) {
     this.organization = {
       _id: 41,
-      secret: '22854636952'
+      secret: '22854636952',
+      publishedStatus: false,
     }
     this.api.singleOrg(id).subscribe((data: any) => {
       // let { response: { response: results, statusCode: s2 }, statusCode: s1 } = data;
       // if (s1 === 200 && s2 === 200) { this.organization = results; }
-      this.organization.id = data.response._id;
-      this.organization.secret = data.response.secret;
+      this.organization.id = data.response?._id;
+      this.organization.secret = data.response?.secret;
+      this.organization.publishedStatus = data.response?.publishedStatus
     })
+  }
+
+  getTitle(){
+   return this.organization.publishedStatus ? 'Un Publish' : 'Publish'
   }
 }
