@@ -34,7 +34,8 @@ import { PublishModule } from '../views/publish/publish.module';
           { path: 'themes', loadChildren: () => import('app/modules/views/themes/themes.module').then(m => m.ThemesModule), data: { breadcrumb: 'Themes' } },
           { path: 'whitelist', loadChildren: () => import('app/modules/views/whitelist/whitelist.module').then(m => m.WhitelistModule), data: { breadcrumb: 'Whitelist' } },
           { path: 'faq', loadChildren: () => import('app/modules/views/faq/faq.module').then(m => m.FaqModule), data: { breadcrumb: 'Faq' } },
-          { path: 'templates', loadChildren: ()=> import('app/modules/views/templates/templates.module'). then(m =>m.TemplatesModule), data: { breadcrumb: 'Templates'}}
+          { path: 'templates', loadChildren: ()=> import('app/modules/views/templates/templates.module'). then(m =>m.TemplatesModule), data: { breadcrumb: 'Templates'}},
+          { path: 'chat-menu', loadChildren: ()=> import('app/modules/views/chat-menu/chat-menu.module'). then(m =>m.ChatMenuModule), data: { breadcrumb: 'Chat-menu'}},
         ]
       }
 
