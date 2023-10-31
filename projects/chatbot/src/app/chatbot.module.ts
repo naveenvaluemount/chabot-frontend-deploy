@@ -19,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatbotPromptsComponent } from './chatbot-prompts/chatbot-prompts.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { ChatBotLoaderComponent } from './chatbot-loader/chatbot-loader.component';
 
 const config: SocketIoConfig = { url: 'http://172.21.3.57:8000', options: {} };
 
@@ -37,7 +38,7 @@ const config: SocketIoConfig = { url: 'http://172.21.3.57:8000', options: {} };
     ChatbotListComponent,
     ChatbotPromptsComponent,
     ChatbotToggleComponent,
-    
+    ChatBotLoaderComponent
   ],
   imports: [
     BrowserModule,

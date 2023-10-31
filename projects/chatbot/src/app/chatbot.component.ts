@@ -18,12 +18,12 @@ export class ChatBotComponent {
   organization: any;
   category: any = [];
   chatHistory: any = [];
-  constructor(private api: ChatbotService, private cd: ChangeDetectorRef, private ele:ElementRef, ) {
+  constructor(private api: ChatbotService, private cd: ChangeDetectorRef, private ele: ElementRef,) {
     this.chatHistory = this.api.chatHistory;
   }
   ngAfterViewInit(): void {
     let sessionId = localStorage.getItem("sessionId");
-    this.api.validator({secret: this.secret, sessionId: sessionId }).subscribe(data => {
+    this.api.validator({ secret: this.secret, sessionId: sessionId }).subscribe(data => {
       if (data.statusCode === 200) {
         this.organization = data.response;
         this.api.setTheme(this.ele, this.organization.theme);
@@ -47,11 +47,11 @@ export class ChatBotComponent {
       this.spinner = false;
     }
   }
-  retrive(client:any, question:any){
-   setTimeout(() => {
-    this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
-   }, 100);
-    this.api.retrive({ client: client, question: question }).subscribe((response:any) => {
+  retrive(client: any, question: any) {
+    setTimeout(() => {
+      this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
+    }, 100);
+    this.api.retrive({ client: client, question: question }).subscribe((response: any) => {
       if (response.statusCode == 200) {
         if (response.response.statusCode == 200) {
           this.spinner = false;
@@ -73,7 +73,7 @@ export class ChatBotComponent {
   initial(client: any, id: any) {
     setTimeout(() => {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
-     }, 100);
+    }, 100);
     this.api.initial({ client: client, content: id }).subscribe((response: any) => {
       if (response.statusCode == 200) {
         if (response.statusCode == 200) {
@@ -118,7 +118,7 @@ export class ChatBotComponent {
   sendMessage(sessionId: any, content: any) {
     setTimeout(() => {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
-     }, 100);
+    }, 100);
     this.api.sendMessage({ client: sessionId, content }).subscribe((response: any) => {
       if (response.statusCode == 200) {
         if (response.statusCode == 200) {
@@ -140,12 +140,70 @@ export class ChatBotComponent {
     });
   }
 
-  getMessages(id: any){
+  getMessages(id: any) {
     setTimeout(() => {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
-     }, 100);
+    }, 100);
     this.api.getMessages(id).subscribe((response: any) => {
       console.log(response);
     });
   }
+
+  // =====================================================
+
+  public chatData: any =
+    [
+      {
+        title: 'Hi',
+        visited: true,
+        responseTitles: ['This is chatbot', 'Choose one of my service'],
+        children: [
+          {
+            title: 'Fruit',
+            visited: false,
+            responseTitles: ['Fruits are good for health', 'Choose a fruit'],
+            children: [
+              { title: 'Apple', visited: false },
+              { title: 'Banana', visited: false },
+              { title: 'Fruit loops', visited: false },
+            ]
+          },
+          {
+            title: 'Vegetables',
+            visited: false,
+            children: [
+              {
+                title: 'Green',
+                visited: false,
+                children: [
+                  { title: 'Broccoli', visited: false },
+                  { title: 'Brussel sprouts', visited: false },
+                ]
+              }, {
+                title: 'Orange',
+                visited: false,
+                children: [
+                  { title: 'Pumpkins', visited: false },
+                  { title: 'Carrots', visited: false },
+                ]
+              },
+            ]
+          },
+        ]
+      }
+    ];
+
+    public newMessage:any;
+
+    send(){
+      this.newMessage = {
+        title: 'How do you do?',
+        direction: 'left'
+      },
+      this.newMessage = {
+        title: 'Good',
+        direction: 'right'
+      }
+    }
+
 }

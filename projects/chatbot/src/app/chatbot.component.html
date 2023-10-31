@@ -2,11 +2,27 @@
 <chatbot-popup [ngClass]="{'expanded':expanded}">
     <chatbot-header></chatbot-header>
     <chatbot-body>
-        <chatbot-holder> 
+        <chatbot-holder>   
 
-            <chatbot-row *ngFor="let item of chatHistory" [type]="item.responseType">
-                <chatbot-avtar name="MS"></chatbot-avtar>
-                <ng-container *ngIf="item.type == 'category'">
+            <chatbot-loader></chatbot-loader>
+
+            <chatbot-row>
+
+                asdf
+                <chatbot-loader [newMessage]="newMessage" style="width:100%"></chatbot-loader>
+
+                <button (click)="send()">send</button>
+                <!-- <ng-container *ngFor="let node of chatData">
+                    <h1>{{node.title}}</h1>
+                    <ng-container *ngIf="node.visited">
+                        <ng-container *ngFor="let a of node?.children">
+                            <h1 (click)="a.visited=true">{{ a.title }}</h1>
+                        </ng-container>
+                    </ng-container>
+                </ng-container> -->
+
+                <!-- <chatbot-avtar name="MS"></chatbot-avtar> -->
+                <!-- <ng-container *ngIf="item.type == 'category'">
                     <chatbot-list [data]="item?.data" (onSelect)="onCategorySelect($event)"></chatbot-list>
                 </ng-container>
                 <ng-container *ngIf="item.type == 'prompt'">
@@ -15,7 +31,7 @@
                
                 <ng-container *ngIf="item.type == 'message' || item.type == 'faq'">
                     <chatbot-message [content]="item?.data"></chatbot-message>
-                </ng-container>
+                </ng-container> -->
                 
             </chatbot-row>
 
