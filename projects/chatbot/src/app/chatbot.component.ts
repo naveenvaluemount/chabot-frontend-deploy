@@ -69,7 +69,64 @@ export class ChatBotComponent {
       this.spinner = false;
     }
   }
-
+  retrive(client: any, question: any) {
+    setTimeout(() => {
+      this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
+    }, 100);
+    this.api.retrive({ client: client, question: question }).subscribe((response: any) => {
+      if (response.statusCode == 200) {
+        if (response.response.statusCode == 200) {
+          this.spinner = false;
+          let category = response.response.response;
+          if (response.response.type == 'category') {
+            this.chatHistory.push({ responseType: 'answer', type: 'category', data: category });
+          }
+          if (response.response.type == 'faq') {
+            this.chatHistory.push({ responseType: 'answer', type: 'faq', data: category });
+          }
+          if (response.response.type == 'prompt') {
+            this.chatHistory.push({ responseType: 'answer', type: 'prompt', data: category });
+          }
+          this.api.chatHistory = this.chatHistory;
+        }
+      }
+    })
+  }
+  initial(client: any, id: any) {
+    setTimeout(() => {
+      this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
+    }, 100);
+    this.api.initial({ client: client, content: id }).subscribe((response: any) => {
+      if (response.statusCode == 200) {
+        if (response.statusCode == 200) {
+          let category = response.response;
+          this.spinner = false;
+          if (response.response.type == 'category') {
+            this.chatHistory.push({ responseType: 'answer', type: 'category', data: category });
+          }
+          if (response.response.type == 'faq') {
+            this.chatHistory.push({ responseType: 'answer', type: 'faq', data: category[0].answer });
+          }
+          if (response.response.type == 'prompt') {
+            this.chatHistory.push({ responseType: 'answer', type: 'prompt', data: category });
+          }
+          this.api.chatHistory = this.chatHistory;
+        }
+      }
+    });
+  }
+  onCategorySelect(item: any) {
+    this.spinner = true;
+    this.initial(this.organization?.id, item.categoryId);
+    this.chatHistory.push({ responseType: 'question', type: 'message', data: item?.categoryName });
+    this.api.chatHistory = this.chatHistory;
+  }
+  onPromptSelect(item: any) {
+    this.spinner = true;
+    this.retrive(this.organization?.id, item.displayText);
+    this.chatHistory.push({ responseType: 'question', type: 'message', data: item?.displayText });
+    this.api.chatHistory = this.chatHistory;
+  }
   onKeyPress(question: any) {
     this.spinner = true;
     const sessionId = localStorage.getItem('sessionId');
@@ -96,7 +153,7 @@ export class ChatBotComponent {
     });
   }
 
-  getMessages(id: any){
+  getMessages(id: any) {
     setTimeout(() => {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
      }, 100);
@@ -106,4 +163,62 @@ export class ChatBotComponent {
       console.log("loadChats",data);
     })
   }
+
+  // =====================================================
+
+  public chatData: any =
+    [
+      {
+        title: 'Hi',
+        visited: true,
+        responseTitles: ['This is chatbot', 'Choose one of my service'],
+        children: [
+          {
+            title: 'Fruit',
+            visited: false,
+            responseTitles: ['Fruits are good for health', 'Choose a fruit'],
+            children: [
+              { title: 'Apple', visited: false },
+              { title: 'Banana', visited: false },
+              { title: 'Fruit loops', visited: false },
+            ]
+          },
+          {
+            title: 'Vegetables',
+            visited: false,
+            children: [
+              {
+                title: 'Green',
+                visited: false,
+                children: [
+                  { title: 'Broccoli', visited: false },
+                  { title: 'Brussel sprouts', visited: false },
+                ]
+              }, {
+                title: 'Orange',
+                visited: false,
+                children: [
+                  { title: 'Pumpkins', visited: false },
+                  { title: 'Carrots', visited: false },
+                ]
+              },
+            ]
+          },
+        ]
+      }
+    ];
+
+    public newMessage:any;
+
+    send(){
+      this.newMessage = {
+        title: 'How do you do?',
+        direction: 'left'
+      },
+      this.newMessage = {
+        title: 'Good',
+        direction: 'right'
+      }
+    }
+
 }

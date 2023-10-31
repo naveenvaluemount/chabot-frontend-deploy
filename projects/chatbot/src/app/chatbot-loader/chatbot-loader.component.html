@@ -1,0 +1,8 @@
+<ng-container *ngFor="let message of chatData">
+    <h1 [ngStyle]="{'text-align':message.direction=='left'?'left':'right'}">
+        {{message.title}}
+        <!-- <chatbot-message [content]="message.title"></chatbot-message> -->
+    </h1>
+</ng-container>
+<h1 *ngIf="loading">Loading . . .</h1>
+

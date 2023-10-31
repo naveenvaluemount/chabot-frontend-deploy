@@ -1,0 +1,36 @@
+<div class="tree">
+    <ul>
+        <li>
+            <ng-container *ngTemplateOutlet="tree; context: { node: node }">
+            </ng-container>
+        </li>
+    </ul>
+</div>
+
+<ng-template #tree let-node="node" let-parent="parent" let-childIndex="childIndex">
+    <a>
+        {{ node.name }}
+        <button class="remove-bottom" (click)="remove(parent, childIndex)">
+            *
+        </button>
+        <button class="plus-bottom" (click)="add(node)">+</button>
+    </a>
+    <ul *ngIf="node.children && node.children.length > 0">
+        <ng-container *ngFor="let child of node.children; let i = index">
+            <li>
+                <ng-container *ngTemplateOutlet="
+              tree;
+              context: { node: child, parent: node, childIndex: i }
+            ">
+                </ng-container>
+            </li>
+        </ng-container>
+    </ul>
+</ng-template>
+
+<ng-container *ngIf="isAdd">
+    <h4>Add node</h4>
+    <label>name: </label>
+    <input type="text" [(ngModel)]="name" />
+    <button (click)="addNode()">add</button>
+</ng-container>
