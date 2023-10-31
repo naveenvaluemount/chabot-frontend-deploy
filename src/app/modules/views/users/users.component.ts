@@ -256,7 +256,7 @@ export class UsersComponent extends Unsubscribe implements OnInit {
       { prop: 'organizationDtos', name: 'Organizations', cellTemplate:this.orgsTemp },
       { prop: 'role', name: 'Role', sort: true },
       { prop: 'status', name: 'Status', cellTemplate: this.statusTemp, sort: true },
-      { prop: 'actions', name: 'Actions', cellTemplate: this.actionsTemp, class: 'hidden md:block !flex-0 basis-[100px]' },
+      { prop: 'actions', name: 'Actions', cellTemplate: this.actionsTemp, class: ' md:block !flex-0 basis-[100px]' },
     ]
     this.cd.detectChanges()
   }

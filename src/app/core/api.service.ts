@@ -196,6 +196,11 @@ export class ApiService {
     return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.publish.UnPublishOrg}${id}`, {})
   }
 
+  // chats
+  getChatList(id: any){
+    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chat.chatList}${id}`)
+  }
+
   signedInRedirect(data) {
 
     if (data) {

@@ -12,7 +12,7 @@ export class ChatbotFooterComponent {
     if (e.key == 'Enter') {
       e.preventDefault();
       this.onKeyPress.emit(this.message.value);
-  
+      this.message.setValue('');
     }
   }
 }

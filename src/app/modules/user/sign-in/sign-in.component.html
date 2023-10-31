@@ -8,8 +8,8 @@
             <mat-icon matPrefix [svgIcon]="'heroicons_outline:user'"></mat-icon>
             <mat-label>Email Address</mat-label>
             <input data-cy="userName" id="email" matInput [formControlName]="'userName'" >
-            <mat-error *ngIf="signInForm.get('userName').hasError('required')">Required </mat-error>
-            <mat-error *ngIf="signInForm.get('userName').hasError('email')">Invalid Email Address</mat-error>
+            <mat-error *ngIf="signInForm.get('userName')?.hasError('required')">Required </mat-error>
+            <mat-error *ngIf="signInForm.get('userName')?.hasError('email')">Invalid Email Address</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" hideRequiredMarker>
             <mat-icon matPrefix [svgIcon]="'heroicons_outline:key'"></mat-icon>

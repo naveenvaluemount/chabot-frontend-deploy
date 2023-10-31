@@ -29,8 +29,8 @@ export class ChatbotService {
   initial(params: any) {
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.category}`, { params: params })
   }
-  sendMessage(params: any) {
-    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.sendMessage}`, { params: params })
+  sendMessage(data: any) {
+    return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.sendMessage}`, data)
   }
   getMessages(id: any){
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.chatbot.getMessages}${id}`)

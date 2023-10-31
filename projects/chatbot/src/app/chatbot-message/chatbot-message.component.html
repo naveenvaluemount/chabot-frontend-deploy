@@ -1,2 +1,5 @@
-{{content}}
+
+<div [ngClass]="{'bg-red-400': content.sender_id !== sender_id,'bg-gray justify-end': content.sender_id == sender_id}" class="flex mb-2">
+    {{content.message}}
+</div>
 <ng-content></ng-content>

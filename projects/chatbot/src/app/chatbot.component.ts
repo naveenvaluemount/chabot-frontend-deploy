@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@ang
 import { ChatbotBodyComponent } from './chatbot-body/chatbot-body.component';
 import { ChatbotFooterComponent } from './chatbot-footer/chatbot-footer.component';
 import { ChatbotService } from './chatbot.service';
-// import { Socket } from 'ngx-socket-io';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'chatbot',
@@ -18,11 +18,15 @@ export class ChatBotComponent {
   organization: any;
   category: any = [];
   chatHistory: any = [];
-  constructor(private api: ChatbotService, private cd: ChangeDetectorRef, private ele:ElementRef, ) {
+  chatMessages: any = [];
+  constructor(private api: ChatbotService, private cd: ChangeDetectorRef, private ele:ElementRef, private socket: Socket) {
     this.chatHistory = this.api.chatHistory;
   }
   ngAfterViewInit(): void {
     let sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      this.socket.emit('newUser', sessionId);
+    }
     this.api.validator({secret: this.secret, sessionId: sessionId }).subscribe(data => {
       if (data.statusCode === 200) {
         this.organization = data.response;
@@ -30,7 +34,18 @@ export class ChatBotComponent {
         this.cd.detectChanges();
         localStorage.setItem("sessionId", data.response?.sessionId);
       }
-    })
+    });
+    let user = {
+      _id: sessionId
+    }
+    this.socket.emit("setup", user);
+      // this.socket.emit('newChat', this.messageData);
+      this.socket.on('loadNewChat', (data)=>{
+        this.chatMessages.push(data);
+      }, );
+  }
+  messageSentToUi(isOwnMessage, data){
+    console.log(isOwnMessage, data)
   }
   onToggle(value: any) {
     this.expanded = value;
@@ -40,6 +55,13 @@ export class ChatBotComponent {
     }, 100);
     if (this.expanded) {
       this.getMessages(sessionId);
+      this.socket.emit('existChat', {sender_id: sessionId, receiver_id: '653b41b065e9597b46d94304'});
+      this.socket.on('loadChats', (data)=>{
+        console.log(data);
+        this.spinner = false;
+        this.chatMessages = data.chats;
+        console.log("msgs", this.chatMessages)
+      })
     }
     if (this.api.chatHistory.length == 0) {
       // this.initial(this.organization?.id, '');
@@ -47,95 +69,29 @@ export class ChatBotComponent {
       this.spinner = false;
     }
   }
-  retrive(client:any, question:any){
-   setTimeout(() => {
-    this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
-   }, 100);
-    this.api.retrive({ client: client, question: question }).subscribe((response:any) => {
-      if (response.statusCode == 200) {
-        if (response.response.statusCode == 200) {
-          this.spinner = false;
-          let category = response.response.response;
-          if (response.response.type == 'category') {
-            this.chatHistory.push({ responseType: 'answer', type: 'category', data: category });
-          }
-          if (response.response.type == 'faq') {
-            this.chatHistory.push({ responseType: 'answer', type: 'faq', data: category });
-          }
-          if (response.response.type == 'prompt') {
-            this.chatHistory.push({ responseType: 'answer', type: 'prompt', data: category });
-          }
-          this.api.chatHistory = this.chatHistory;
-        }
-      }
-    })
-  }
-  initial(client: any, id: any) {
-    setTimeout(() => {
-      this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
-     }, 100);
-    this.api.initial({ client: client, content: id }).subscribe((response: any) => {
-      if (response.statusCode == 200) {
-        if (response.statusCode == 200) {
-          let category = response.response;
-          this.spinner = false;
-          if (response.response.type == 'category') {
-            this.chatHistory.push({ responseType: 'answer', type: 'category', data: category });
-          }
-          if (response.response.type == 'faq') {
-            this.chatHistory.push({ responseType: 'answer', type: 'faq', data: category[0].answer });
-          }
-          if (response.response.type == 'prompt') {
-            this.chatHistory.push({ responseType: 'answer', type: 'prompt', data: category });
-          }
-          this.api.chatHistory = this.chatHistory;
-        }
-      }
-    });
-  }
-  onCategorySelect(item: any) {
-    this.spinner = true;
-    this.initial(this.organization?.id, item.categoryId);
-    this.chatHistory.push({ responseType: 'question', type: 'message', data: item?.categoryName });
-    this.api.chatHistory = this.chatHistory;
-  }
-  onPromptSelect(item: any) {
-    this.spinner = true;
-    this.retrive(this.organization?.id, item.displayText);
-    this.chatHistory.push({ responseType: 'question', type: 'message', data: item?.displayText });
-    this.api.chatHistory = this.chatHistory;
-  }
+
   onKeyPress(question: any) {
     this.spinner = true;
     const sessionId = localStorage.getItem('sessionId');
     // this.retrive(this.organization?.id, question);
     this.sendMessage(sessionId, question);
   }
-  // sendMessage(message: string) {
-  //   // Emit the message to the server
-  //   this.socket.emit('newMessage', { content: message, sender: 'Chatbot' });
-  // }
+  socketSendMessage(message: string) {
+    // Emit the message to the server
+    this.socket.emit('newChat', { content: message, sender: 'Chatbot' });
+  }
   sendMessage(sessionId: any, content: any) {
     setTimeout(() => {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
      }, 100);
-    this.api.sendMessage({ client: sessionId, content }).subscribe((response: any) => {
+     let sendObj = Object.assign({});
+     sendObj.sender_id = sessionId,
+     sendObj.receiver_id = "653b41b065e9597b46d94304",
+     sendObj.content = content
+    this.api.sendMessage(sendObj).subscribe((response: any) => {
       if (response.statusCode == 200) {
-        if (response.statusCode == 200) {
-          console.log(response)
-          let category = response.response;
-          this.spinner = false;
-          if (response.response.type == 'category') {
-            this.chatHistory.push({ responseType: 'answer', type: 'category', data: category });
-          }
-          if (response.response.type == 'faq') {
-            this.chatHistory.push({ responseType: 'answer', type: 'faq', data: category[0].answer });
-          }
-          if (response.response.type == 'prompt') {
-            this.chatHistory.push({ responseType: 'answer', type: 'prompt', data: category });
-          }
-          this.api.chatHistory = this.chatHistory;
-        }
+        this.socket.emit('existChat', {sender_id: sessionId, receiver_id: '653b41b065e9597b46d94304'});
+        this.socket.emit('newChat', response.response);
       }
     });
   }
@@ -144,8 +100,10 @@ export class ChatBotComponent {
     setTimeout(() => {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
      }, 100);
-    this.api.getMessages(id).subscribe((response: any) => {
-      console.log(response);
-    });
+    let sessionId = localStorage.getItem("sessionId");
+    this.socket.emit('existChat', {sender_id: sessionId, receiver_id: "653b41b065e9597b46d94304"});
+     this.socket.on('loadChats', (data)=>{
+      console.log("loadChats",data);
+    })
   }
 }

@@ -75,7 +75,9 @@ export class SignInComponent implements OnInit {
     sendObj.password = this.signInForm.value.password;
     this.api.login(sendObj).subscribe(response=>{
       if(response.statusCode === 200){
-        this.api.signedInRedirect(response);
+        this.api.signedInRedirect(response.response);
+        console.log(response.response);
+        localStorage.setItem("data", JSON.stringify(response.response));
         this.snackbar.open(response.message ? response.message : 'Success.',null, { duration: 3000, panelClass:'snackbar-success' });
           // this.signInForm.reset();
           // this.api.signedInRedirect('SUPERADMIN');

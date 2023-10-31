@@ -55,5 +55,8 @@ export const endpoints =  {
     publish: {
         publishOrg: 'publish/publishById/',
         UnPublishOrg: 'publish/unPublishById/'
+    },
+    chat: {
+        chatList: 'api/chat/'
     }
 }

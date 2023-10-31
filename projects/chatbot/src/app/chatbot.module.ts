@@ -20,7 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ChatbotPromptsComponent } from './chatbot-prompts/chatbot-prompts.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: 'http://172.21.3.57:8000', options: {} };
+const config: SocketIoConfig = { url: 'http://192.168.0.108:8000', options: {} };
+// const config: SocketIoConfig = { url: 'http://192.168.1.5:8000', options: {} };
 
 @NgModule({
   declarations: [
