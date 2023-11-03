@@ -46,15 +46,16 @@ export class UsersComponent extends Unsubscribe implements OnInit {
 ];
   form: FormGroup = this.fb.group({
     // email: [""],
-    firstName: ["", [Validators.required]],
-    lastName: ["", [Validators.required]],
+    firstname: ["", [Validators.required]],
+    lastname: ["", [Validators.required]],
     orgIds: [[], [Validators.required]],
     phoneNumber: ["", [Validators.required, Validators.pattern(this.api.patterns.mobile)]],
     roleId: 6,
     updateOrganization: true,
     updateRoles: true,
     userId: [null],
-    userName: ["", [Validators.required, Validators.email]],
+    email: ["", [Validators.required, Validators.email]],
+    password: ['', Validators.required],
     status: [''],
     filterStatus: ['active']
   });
@@ -75,8 +76,8 @@ export class UsersComponent extends Unsubscribe implements OnInit {
   data:any = [
     {
       id: 0,
-      userName: 'naveen@gmail.com',
-      firstName: 'Naveen',
+      email: 'naveen@gmail.com',
+      firstname: 'Naveen',
       role: 'admin',
       status: 'active',
       organizationDtos: [
@@ -92,8 +93,8 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     },
     {
       id: 1,
-      userName: 'akhil@gmail.com',
-      firstName: 'Akhil',
+      email: 'akhil@gmail.com',
+      firstname: 'Akhil',
       role: 'admin',
       status: 'active',
       organizationDtos: [
@@ -105,8 +106,8 @@ export class UsersComponent extends Unsubscribe implements OnInit {
     },
     {
       id: 2,
-      userName: 'mohith@gmail.com',
-      firstName: 'Mohith',
+      email: 'mohith@gmail.com',
+      firstname: 'Mohith',
       role: 'admin',
       status: 'active',
       organizationDtos: [
@@ -251,8 +252,8 @@ export class UsersComponent extends Unsubscribe implements OnInit {
   }
   ngAfterViewInit(): void {
     this.columns = [
-      { prop: 'userName', name: 'Email', sort: true },
-      { prop: 'firstName', name: 'Name', sort: true },
+      { prop: 'email', name: 'Email', sort: true },
+      { prop: 'firstname', name: 'Name', sort: true },
       { prop: 'organizationDtos', name: 'Organizations', cellTemplate:this.orgsTemp },
       { prop: 'role', name: 'Role', sort: true },
       { prop: 'status', name: 'Status', cellTemplate: this.statusTemp, sort: true },

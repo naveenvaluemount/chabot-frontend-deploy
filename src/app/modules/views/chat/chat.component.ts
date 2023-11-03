@@ -21,16 +21,19 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
 ngOnInit(): void {
   this.user = JSON.parse(localStorage.getItem('data'));
-  this.userId = this.user?._id;
-  this.sender_id = this.userId;
+  this.userId = this.user?.orgIds[0];
+  // this.sender_id = this.userId;
   this.getChatList();
 }
 
 ngAfterViewInit(): void {
       // this.socket.emit('newChat', this.messageData);
       this.socket.on('loadNewChat', (data)=>{
-        this.chatMessages.push(data)
-      }, );
+        console.log(data)
+        this.chatMessages.push(data);
+        this.sender_id = data.receiver_id;
+        console.log(this.sender_id);
+      },);
     
       // this.getChatInfo();
       this.socket.on('loadNewUser', (data: any)=>{
@@ -45,6 +48,9 @@ getChatList(){
   this.service.getChatList(this.userId).subscribe((res: any)=>{
    if (res.statusCode == 200) {
       this.chats = res.chats;
+      this.chats.map((data: any)=>{
+        this.sender_id = data.organization
+      })
       this.socket.emit('newUser', this.chats);
    }
   });
@@ -83,6 +89,7 @@ sendMessage(sessionId: any, content: any) {
 }
 
 getChatInfo(data: any){
+  console.log(this.sender_id)
   this.receiver_id = data._id;
   localStorage.setItem('receiver_id', this.receiver_id);
   this.socket.emit('existChat', {sender_id: this.sender_id, receiver_id: this.receiver_id});

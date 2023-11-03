@@ -19,6 +19,8 @@ export class ChatBotComponent {
   category: any = [];
   chatHistory: any = [];
   chatMessages: any = [];
+  receiver_id: any;
+
   constructor(private api: ChatbotService, private cd: ChangeDetectorRef, private ele:ElementRef, private socket: Socket) {
     this.chatHistory = this.api.chatHistory;
   }
@@ -27,6 +29,9 @@ export class ChatBotComponent {
     if (sessionId) {
       this.socket.emit('newUser', sessionId);
     }
+
+    this.receiver_id = this.secret.split('-')?.[0];
+
     this.api.validator({secret: this.secret, sessionId: sessionId }).subscribe(data => {
       if (data.statusCode === 200) {
         this.organization = data.response;
@@ -55,7 +60,8 @@ export class ChatBotComponent {
     }, 100);
     if (this.expanded) {
       this.getMessages(sessionId);
-      this.socket.emit('existChat', {sender_id: sessionId, receiver_id: '653b41b065e9597b46d94304'});
+      // this.socket.emit('existChat', {sender_id: sessionId, receiver_id: '653b41b065e9597b46d94304'});
+      this.socket.emit('existChat', {sender_id: sessionId, receiver_id: this.receiver_id});
       this.socket.on('loadChats', (data)=>{
         console.log(data);
         this.spinner = false;
@@ -143,11 +149,11 @@ export class ChatBotComponent {
      }, 100);
      let sendObj = Object.assign({});
      sendObj.sender_id = sessionId,
-     sendObj.receiver_id = "653b41b065e9597b46d94304",
+     sendObj.receiver_id = this.receiver_id,
      sendObj.content = content
     this.api.sendMessage(sendObj).subscribe((response: any) => {
       if (response.statusCode == 200) {
-        this.socket.emit('existChat', {sender_id: sessionId, receiver_id: '653b41b065e9597b46d94304'});
+        this.socket.emit('existChat', {sender_id: sessionId, receiver_id: this.receiver_id});
         this.socket.emit('newChat', response.response);
       }
     });
@@ -158,7 +164,7 @@ export class ChatBotComponent {
       this.chatBody.ele.nativeElement.scrollTop = this.chatBody.ele.nativeElement.scrollHeight;
      }, 100);
     let sessionId = localStorage.getItem("sessionId");
-    this.socket.emit('existChat', {sender_id: sessionId, receiver_id: "653b41b065e9597b46d94304"});
+    this.socket.emit('existChat', {sender_id: sessionId, receiver_id: this.receiver_id});
      this.socket.on('loadChats', (data)=>{
       console.log("loadChats",data);
     })

@@ -10,9 +10,9 @@ export class EmbeddingComponent {
   constructor(private renderer2:Renderer2){
 
     if (isDevMode()) {
-      this.embedd('assets/chatbot.js')
+      this.embedd('assets/chatbot.js');
     } else {
-      this.embedd(environment.baseurl+'/chatbot.js')
+      this.embedd(environment.baseurl+'/chatbot.js');
     }
    
   }

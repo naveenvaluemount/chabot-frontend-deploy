@@ -1,7 +1,7 @@
 import concat from 'concat-files';
 import minimist from 'minimist';
 const configuration = minimist(process.argv.slice(2)).configuration;
-const path = (configuration == 'development') ? 'src/assets/chatbot.js' : 'dist/fuse/chatbot.js';
+const path = (configuration == 'development') ? 'src/assets/chatbot.js' : 'dist/chatbot.js';
 console.log(path)
 concat([
     'dist/chatbot/runtime.js',

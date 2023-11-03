@@ -33,7 +33,7 @@
     <button data-cy="edit" type="button" (click)="updateFn(row)" mat-icon-button><mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon></button>
 </ng-template>
 
-<ng-template #statusTemp let-row="row">
+<ng-template #statusTemp let-row="row"> 
     <span
     class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
     [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': row.status=='inActive',
@@ -62,24 +62,24 @@
         <div>
             <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
                 <mat-label>First Name</mat-label>
-                <input data-cy="firstName" matInput formControlName="firstName">
-                <mat-error *ngIf="form.get('firstName').hasError('required')">*Required </mat-error>
+                <input data-cy="firstname" matInput formControlName="firstname">
+                <mat-error *ngIf="form.get('firstname').hasError('required')">*Required </mat-error>
             </mat-form-field>
         </div>
         <div>
             <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
                 <mat-label>Last Name</mat-label>
-                <input data-cy="lastName" matInput formControlName="lastName">
-                <mat-error *ngIf="form.get('lastName').hasError('required')">*Required </mat-error>
+                <input data-cy="lastname" matInput formControlName="lastname">
+                <mat-error *ngIf="form.get('lastname').hasError('required')">*Required </mat-error>
             </mat-form-field>
         </div>
 
         <div class="col-span-2">
             <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
-                <mat-label>Username</mat-label>
-                <input data-cy="userName" matInput formControlName="userName">
-                <mat-error *ngIf="form.get('userName').hasError('required')">*Required </mat-error>
-                <mat-error *ngIf="form.get('userName').hasError('email')">Invalid Email </mat-error>
+                <mat-label>email</mat-label>
+                <input data-cy="email" matInput formControlName="email">
+                <mat-error *ngIf="form.get('email').hasError('required')">*Required </mat-error>
+                <mat-error *ngIf="form.get('email').hasError('email')">Invalid Email </mat-error>
             </mat-form-field>
         </div>
         <div class="col-span-2">
@@ -90,7 +90,13 @@
                 <mat-error *ngIf="form.get('phoneNumber').hasError('pattern')">Invalid Phone Number</mat-error>
             </mat-form-field>
         </div>
-
+        <div class="col-span-2">
+            <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
+                <mat-label>Password</mat-label>
+                <input data-cy="password" matInput formControlName="password">
+                <mat-error *ngIf="form.get('password').hasError('required')">*Required </mat-error>
+            </mat-form-field>
+        </div>
 
         <div [ngClass]="{'col-span-2' : !form.get('userId').value }">
             <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
