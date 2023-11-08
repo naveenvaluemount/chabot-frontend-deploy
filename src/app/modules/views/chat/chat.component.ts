@@ -27,9 +27,9 @@ ngOnInit(): void {
 }
 
 ngAfterViewInit(): void {
-      // this.socket.emit('newChat', this.messageData);
+      this.socket.emit('newChat', this.messageData);
       this.socket.on('loadNewChat', (data)=>{
-        console.log(data)
+        console.log('loadNewChat', data)
         this.chatMessages.push(data);
         this.sender_id = data.receiver_id;
         console.log(this.sender_id);
@@ -37,7 +37,6 @@ ngAfterViewInit(): void {
     
       // this.getChatInfo();
       this.socket.on('loadNewUser', (data: any)=>{
-        console.log("triggered", data)
         this.getChatList();
       });
 }
@@ -50,8 +49,7 @@ getChatList(){
       this.chats = res.chats;
       this.chats.map((data: any)=>{
         this.sender_id = data.organization
-      })
-      this.socket.emit('newUser', this.chats);
+      });
    }
   });
 }

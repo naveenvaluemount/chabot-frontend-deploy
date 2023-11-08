@@ -16,9 +16,10 @@ import { AuthInterceptor } from './core/auth.interceptor';
 import { ApiService } from './core/api.service';
 import { EmbeddingModule } from './layout/common/embedding/embedding.module';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'environments/environment.development';
 
-const config: SocketIoConfig = { url: 'http://192.168.0.108:8000', options: {} };
-// const config: SocketIoConfig = { url: 'http://192.168.1.5:8000', options: {} };
+const config: SocketIoConfig = { url: environment.baseurl, options: {} };
+// const config: SocketIoConfig = { url: 'http://192.168.0.124:8000', options: {} };
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,

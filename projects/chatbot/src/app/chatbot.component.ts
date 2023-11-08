@@ -26,9 +26,8 @@ export class ChatBotComponent {
   }
   ngAfterViewInit(): void {
     let sessionId = localStorage.getItem("sessionId");
-    if (sessionId) {
-      this.socket.emit('newUser', sessionId);
-    }
+
+    this.socket.emit('newUser', sessionId);
 
     this.receiver_id = this.secret.split('-')?.[0];
 
