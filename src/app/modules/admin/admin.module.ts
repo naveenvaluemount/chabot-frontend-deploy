@@ -23,7 +23,7 @@ import { OrgResolver } from 'app/core/org.resolver';
     RouterModule.forChild([{
       path: '',
       component: AdminComponent,
-      // canMatch: [AuthGuard], 
+      canMatch: [AuthGuard], 
       children: [
         { path: '', pathMatch: 'full', redirectTo: 'organizations' },
         

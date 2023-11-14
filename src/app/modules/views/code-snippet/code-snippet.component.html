@@ -1,11 +1,15 @@
-<app-dialog class="-m-[24px]">
+<app-dialog class="-m-[24px] custom-dialog">
     <app-dialog-header title="Code Snippet">
         <button type="button" mat-icon-button class="-mr-5" (click)="dialog.closeAll()"><mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon></button>
     </app-dialog-header>
     <app-dialog-body>
-        <div class="-m-8 p-5 bg-gray-700 flex items-center">
+        <div class="-m-8 p-5 bg-gray-700 flex items-center overscroll-none break-words ">
             <textarea fuse-highlight lang="html" #code><script src="https://naveenvaluemount.github.io/chabot-frontend-deploy/chatbot.js" CLIENTID="{{data}}"></script></textarea>
-            <button type="button" mat-icon-button  matTooltip="Copy" class="ml-auto" (click)="copyFn(code)"><mat-icon class="text-white" [svgIcon]="'heroicons_outline:document-duplicate'"></mat-icon></button>
         </div>
     </app-dialog-body>
+    <app-dialog-footer>
+        <div>
+            <button type="button" mat-raised-button color="primary" class="ml-auto" (click)="copyFn(code)">COPY<mat-icon class="text-blue" [svgIcon]="'heroicons_outline:document-duplicate'"></mat-icon></button>
+        </div>
+    </app-dialog-footer>
 </app-dialog>

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'app/core/api.service';
 import { CodeSnippetComponent } from '../views/code-snippet/code-snippet.component';
@@ -25,7 +25,8 @@ export class OrganizationComponent {
     }
   }
   getCode(e: any) {
-    this.dialog.open(CodeSnippetComponent, { width: '1350px', data: this.organization?.secret })
+
+    this.dialog.open(CodeSnippetComponent, { width: '70%', data: this.organization?.secret })
   }
   
   getPublish(e: any) {

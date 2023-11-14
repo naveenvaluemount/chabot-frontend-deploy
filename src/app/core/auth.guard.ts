@@ -11,10 +11,10 @@ export class AuthGuard implements CanMatch {
   canMatch(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      // if(!this.api.accessToken){
-      //   this.router.navigate(['/'])
-      //   return false
-      // }
+      if(!this.api.accessToken){
+        this.router.navigate(['/'])
+        return false
+      }
     return true;
   }
 }

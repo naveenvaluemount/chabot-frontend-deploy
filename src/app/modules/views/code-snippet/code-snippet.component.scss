@@ -1,0 +1,14 @@
+// .custom-dialog {
+//     width: 1400px !important; 
+//     max-width: none !important; 
+// }
+
+// ::ng-deep .custom-dialog {
+//     width: 1400px;
+//     white-space: pre-wrap;
+//     overflow-x: auto;
+// }
+
+::ng-deep pre{
+    white-space: inherit;
+}

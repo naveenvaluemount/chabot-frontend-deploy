@@ -21,7 +21,7 @@ import { MemberModule } from 'app/layout/common/member/member.module';
     RouterModule.forChild([{
       path: '',
       component: SuperAdminComponent,
-      // canMatch: [AuthGuard], 
+      canMatch: [AuthGuard], 
       children: [
         { path: '', pathMatch: 'full', redirectTo: 'organizations' },
         { path: 'chat', loadChildren: () => import('app/modules/views/chat/chat.module').then(m => m.ChatModule), data: { breadcrumb: 'Chat' } },

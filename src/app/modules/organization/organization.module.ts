@@ -27,7 +27,7 @@ import { PublishModule } from '../views/publish/publish.module';
     {
         path: '',
         component: OrganizationComponent,
-        // canMatch: [AuthGuard],
+        canMatch: [AuthGuard],
         children:[
           { path: '', pathMatch: 'full', redirectTo: 'services' },
           { path: 'services', loadChildren: () => import('app/modules/views/services/services.module').then(m => m.ServicesModule), data: { breadcrumb: 'Services' } },

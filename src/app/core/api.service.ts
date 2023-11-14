@@ -52,7 +52,8 @@ export class ApiService {
     return this.http.post(`${environment.baseurl}${environment.api}${environment.endpoints.users.login}`, fb).pipe(
       switchMap((response: any) => {
         // this.addSession(response.response.accessToken.Authorization, response.response.accessToken.REFRESH_TOKEN);
-        // this.userData = response.response.data;
+        this.addSession(response.accessToken, response?.REFRESH_TOKEN);
+        this.userData = response.response;
         return of(response)
       })
     );
@@ -83,7 +84,7 @@ export class ApiService {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("organization");
-
+    localStorage.removeItem('data');
   }
   getToken(): Observable<any> {
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.users.refreshToken}`, { params: { refreshToken: this.refreshToken } }).pipe(
