@@ -74,6 +74,24 @@
     <form [formGroup]="form">
          <div class="grid grid-cols-1 gap-4">
             <div class="col-span-2">
+                <div class="w-full" hideRequiredMarker>
+                  <mat-label>Organization Logo</mat-label>
+                  <input  #file type="file" (change)="onImageChange($event)" accept="image/*">
+                </div>
+              </div>
+              
+            <div *ngIf="showCropper" class="cropper-container">
+                <!-- <image-cropper [imageChangedEvent]="imageChangedEvent" [imageBase64]="base64String" [roundCropper]="true"  [maintainAspectRatio]="true" [aspectRatio]="1" format="png" (imageCropped)="cropImage($event)"></image-cropper> -->
+                <app-image-cropper [showCropper]="showCropper" [imageChangedEvent]="imageChangedEvent" [base64String]="base64String"
+                    (imageCropped)="cropImage($event)"></app-image-cropper>
+              </div>
+
+              <div *ngIf="fileContent">
+                <img [src]="fileContent">
+              </div>
+              
+              
+            <div class="col-span-2">
             <mat-form-field class="w-full" hideRequiredMarker subscriptSizing='dynamic'>
                 <mat-label>Organization</mat-label>
                 <input matInput formControlName="clientName" data-cy="clientName">

@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         MatProgressSpinnerModule,
         StatusBadgeModule,
         MatSlideToggleModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        ImageCropperModule
     ],
     exports: [
         CommonModule,
@@ -66,7 +68,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         MatProgressSpinnerModule,
         StatusBadgeModule,
         MatSlideToggleModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        ImageCropperModule
     ]
 })
 export class SharedModule {

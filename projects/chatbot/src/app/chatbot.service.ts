@@ -20,6 +20,11 @@ export class ChatbotService {
   validator(params: any): Observable<any> {
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.organization.validator}`, {params: params});
   }
+
+  chatTree(params: any): Observable<any> {
+    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.organization.chatTree}`,  {params: params});
+  }
+
   faq(id: any): Observable<any> {
     return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.faqs.single}${id}`);
   }

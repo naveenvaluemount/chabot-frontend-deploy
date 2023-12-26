@@ -78,9 +78,9 @@ export class WhitelistComponent extends Unsubscribe implements OnInit {
     this.api.allWhitelist(params).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
       if (data.statusCode === 200) {
         this.isLoaded = true;
-        if (data.response.statusCode === 200) {
+        if (data.statusCode === 200) {
           this.isEmpty = false;
-          this.categories = data.response.response;
+          this.categories = data.response;
           this.params.pageCount = data.response.count;
           if(data.response.count == 0){
             this.isEmpty = true;
@@ -123,15 +123,15 @@ export class WhitelistComponent extends Unsubscribe implements OnInit {
   updateFn(item: any) {
     this.crud.toggle("edit");
     this.form.patchValue(item)
-    this.form.get("id").setValue(item.id);
+    this.form.get("id").setValue(item._id);
   }
   deleteFn(item: any) {
     let dialogRef = this.fcs.open();
     dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe)).subscribe((result) => {
       if (result === 'confirmed') {
-        this.api.deleteWhitelist(item.id, this.oid).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
+        this.api.deleteWhitelist(item._id, this.oid).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
           if (data.statusCode === 200) {
-            if (data.response.statusCode === 200) {
+            if (data.statusCode === 200) {
               this.isLoaded = false;
               this.snackbar.open('IP Deleted', null, { duration: 1000 })
               this.getList(this.oid);
@@ -169,7 +169,7 @@ export class WhitelistComponent extends Unsubscribe implements OnInit {
     if (this.form.valid) {
       this.api.createWhitelist(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('IP Added', null, { duration: 1000 })
@@ -185,7 +185,7 @@ export class WhitelistComponent extends Unsubscribe implements OnInit {
     if (this.form.valid) {
       this.api.createWhitelist(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
-          if (data.response.statusCode === 200) {
+          if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
             this.snackbar.open('IP Updated', null, { duration: 1000 })

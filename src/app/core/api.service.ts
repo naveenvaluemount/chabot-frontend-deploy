@@ -166,6 +166,15 @@ export class ApiService {
     return this.http.delete(`${environment.baseurl}${environment.api}${environment.endpoints.faqs.delete}`, { params: params });
   }
 
+  // chat Tree
+
+  chatTree(secret: any): Observable<any> {
+    return this.http.get(`${environment.baseurl}${environment.api}${environment.endpoints.organization.chatTree}/${secret}`, null);
+  }
+
+
+  
+
   isSuperAdmin() {
     return this.userData?.roles?.roleId === SUPERADMIN
   }

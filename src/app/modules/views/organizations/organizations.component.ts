@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -7,6 +7,10 @@ import { ApiService } from 'app/core/api.service';
 import { Unsubscribe } from 'app/core/unsubscribe';
 import { CrudComponent } from 'app/layout/common/crud/crud.component';
 import { takeUntil } from 'rxjs';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ImageCropperComponent } from 'app/layout/common/imageCropper/image-cropper/image-cropper.component';
+
 @Component({
   selector: 'app-organizations',
   templateUrl: './organizations.component.html',
@@ -22,6 +26,9 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
   @ViewChild("publishTemp", { static: false }) publishTemp: TemplateRef<any>;
   @ViewChild("publishonTemp", { static: false }) publishonTemp: TemplateRef<any>;
   @ViewChild("statusTemp", { static: false }) statusTemp: TemplateRef<any>;
+  @ViewChild('file', { static: false }) fileInput: ElementRef;
+  // Add the new component to the ViewChild
+  @ViewChild(ImageCropperComponent, { static: false }) imageCropper: ImageCropperComponent;
   isEmpty: boolean = false;
   isLoaded: boolean = false;
   breadcrumbs: any = [
@@ -37,7 +44,8 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
   orgs: any;
   columns: any;
   form: FormGroup = this.fb.group({
-    clientName: ["", [Validators.required]],
+    clientName: ["", [Validators.required]], 
+    logo: [""],
     // name: ["", [Validators.required]],
     email: ["", [Validators.required, Validators.email]],
     phoneNumber: ["", [Validators.required, Validators.pattern(this.api.patterns.mobile)]],
@@ -101,7 +109,13 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
 
     }
   ]
-  constructor(private api: ApiService, private fb: FormBuilder, private cd: ChangeDetectorRef, private fcs: FuseConfirmationService, private snackbar: MatSnackBar, private router: Router) {
+
+  showCropper = false;
+  imageChangedEvent: any = {};
+  croppedImage: any;
+  selectedFile: File;
+  fileContent: string = null;
+  constructor(private api: ApiService,  private sanitizer: DomSanitizer, private fb: FormBuilder, private cd: ChangeDetectorRef, private fcs: FuseConfirmationService, private snackbar: MatSnackBar, private router: Router) {
     super();
   }
   getList() {
@@ -142,12 +156,26 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     this.cd.detectChanges()
   }
   onSubmit() {
+    let fd = new FormData();
+    fd.append("logo", this.fileContent);
+    fd.append("clientName", this.form.get('clientName')?.value);
+    fd.append("email", this.form.get('email')?.value);
+    fd.append("phoneNumber", this.form.get('phoneNumber')?.value);
+    fd.append("domain", this.form.get('domain')?.value);
+    fd.append("address", this.form.get('address')?.value);
+    fd.append("status", this.form.get('status')?.value);
+    fd.append("id", this.form.get('id')?.value ? this.form.get('id')?.value : null);
+
+    // fd.append("clientName", this.form.);
+
     if (this.form.valid) {
-      this.api.createOrg(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
+      this.api.createOrg(fd).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
           if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
+            this.showCropper = false;
+            this.fileInput.nativeElement.value = '';
             this.snackbar.open('Org Added', null, { duration: 1000 })
             this.getList();
           }
@@ -158,12 +186,26 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     }
   }
   onUpdate() {
+let fd = new FormData();
+fd.append("logo", this.fileContent);
+fd.append("clientName", this.form.get('clientName')?.value);
+fd.append("email", this.form.get('email')?.value);
+fd.append("phoneNumber", this.form.get('phoneNumber')?.value);
+fd.append("domain", this.form.get('domain')?.value);
+fd.append("address", this.form.get('address')?.value);
+fd.append("status", this.form.get('status')?.value);
+fd.append("published", this.form.get('published')?.value);
+fd.append("publishedStatus", this.form.get('publishedStatus')?.value);
+fd.append("id", this.form.get('id')?.value ? this.form.get('id')?.value : null);
+
     if (this.form.valid) {
-      this.api.createOrg(this.form.value).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
+      this.api.createOrg(fd).pipe(takeUntil(this.unsubscribe)).subscribe((data: any) => {
         if (data.statusCode === 200) {
           if (data.statusCode === 200) {
             this.crud.toggle(null);
             this.isLoaded = false;
+            this.showCropper = false;
+            this.fileInput.nativeElement.value = '';
             this.snackbar.open('Org Updated', null, { duration: 1000 })
             this.getList();
           }
@@ -177,13 +219,18 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     if (!e) {
       this.form.reset({status: this.form.get('status').value, published: this.form.get('published').value})
     }
-
+    if (!this.crud?.isEditable) {
+      this.showCropper = false;
+      this.fileInput.nativeElement.value = null;
+      this.fileContent = null;
+    }
   }
   updateFn(item: any) {
-      console.log(item)
+    console.log(item)
     this.crud.toggle("edit");
-    this.form.patchValue(item)
+    this.form.patchValue(item);
     this.form.get("id").setValue(item._id);
+    this.fileContent = item.logo;
   }
   deleteFn(item: any) {
     let dialogRef = this.fcs.open();
@@ -222,5 +269,49 @@ export class OrganizationsComponent extends Unsubscribe implements AfterViewInit
     this.params.keyword = e.value ? e.value : '';
     this.getList();
 }
+
+
+
+onImageChange(event: any) {
+  this.imageChangedEvent = event;
+  this.selectedFile = event.target.files[0];
+
+  if (this.selectedFile) {
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      console.log(reader);
+      this.fileContent = reader.result as string;
+      this.showCropper = true;
+    };
+    reader.readAsDataURL(this.selectedFile);
+  }
+
+}
+
+cropImage(event: ImageCroppedEvent) {
+  this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
+  console.log(this.croppedImage)
+  if (this.croppedImage) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.fileContent = reader.result as string;
+    };
+   this.croppedImage =  reader.readAsDataURL(event.blob);
+  }
+
+
+  this.form.patchValue({
+    logo: this.fileContent
+  })
+}
+
+// saveCroppedImage() {
+//   // this.form.get('logo').setValue(this.croppedImage);
+//   this.showCropper = false;
+//     this.fileInput.nativeElement.value = '';
+// }
+
+
 
 }

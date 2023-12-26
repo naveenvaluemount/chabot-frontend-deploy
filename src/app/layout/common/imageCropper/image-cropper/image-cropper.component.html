@@ -1,0 +1,12 @@
+<div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [imageBase64]="base64String"
+      [roundCropper]="true"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="1"
+      format="png"
+      (imageCropped)="cropImage($event)"
+    ></image-cropper>
+  </div>
+ 

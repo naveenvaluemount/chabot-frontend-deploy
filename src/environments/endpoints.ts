@@ -17,7 +17,7 @@ export const endpoints =  {
         read:'org/allOrg',
         single:'org/getById/',
         validator:'org/validator',
-
+        chatTree:'org/chatTree'
     },
     categories:{
         create:'category/createorUpdate',

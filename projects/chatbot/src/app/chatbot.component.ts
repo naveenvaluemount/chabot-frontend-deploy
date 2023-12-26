@@ -20,27 +20,31 @@ export class ChatBotComponent {
   chatHistory: any = [];
   chatMessages: any = [];
   receiver_id: any;
+  sessionId: any;
 
   constructor(private api: ChatbotService, private cd: ChangeDetectorRef, private ele:ElementRef, private socket: Socket) {
     this.chatHistory = this.api.chatHistory;
   }
   ngAfterViewInit(): void {
-    let sessionId = localStorage.getItem("sessionId");
+     this.sessionId = localStorage.getItem("sessionId");
 
-    this.socket.emit('newUser', sessionId);
+    this.socket.emit('newUser', this.sessionId);
 
     this.receiver_id = this.secret.split('-')?.[0];
 
-    this.api.validator({secret: this.secret, sessionId: sessionId }).subscribe(data => {
+    this.api.validator({secret: this.secret, sessionId: this.sessionId }).subscribe(data => {
       if (data.statusCode === 200) {
         this.organization = data.response;
         this.api.setTheme(this.ele, this.organization.theme);
         this.cd.detectChanges();
         localStorage.setItem("sessionId", data.response?.sessionId);
+        console.log("called")
+        this.loadTree();
       }
     });
+
     let user = {
-      _id: sessionId
+      _id: this.sessionId
     }
     this.socket.emit("setup", user);
       // this.socket.emit('newChat', this.messageData);
@@ -48,6 +52,19 @@ export class ChatBotComponent {
         this.chatMessages.push(data);
       }, );
   }
+
+  loadTree(){
+    this.api.chatTree({secret: this.secret}).subscribe(data => {
+      if (data.statusCode === 200) {
+        console.log(data);
+        // this.organization = data.response;
+        // this.api.setTheme(this.ele, this.organization.theme);
+        // this.cd.detectChanges();
+        // localStorage.setItem("sessionId", data.response?.sessionId);
+      }
+    });
+  }
+
   messageSentToUi(isOwnMessage, data){
     console.log(isOwnMessage, data)
   }
